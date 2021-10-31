@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode=development --open --hot",
+    "dev": "webpack-dev-server --mode=development --open --hot",
     "build": "webpack --mode=production"
   },
   "author": "",
@@ -26,8 +26,10 @@
     "@babel/preset-react": "^7.16.0",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.0",
+    "dotenv": "^10.0.0",
     "html-webpack-plugin": "^5.5.0",
     "prettier": "^2.4.1",
+    "process": "^0.11.10",
     "style-loader": "^3.3.1",
     "webpack": "^5.61.0",
     "webpack-cli": "^4.9.1",
