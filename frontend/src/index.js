@@ -1,6 +1,15 @@
-import React from "react";
-import { render } from "react-dom";
+import React from 'react'
+import { render } from 'react-dom'
 
-import HelloWorld from "./HelloWorld";
+import { App } from './App'
+import { BrowserRouter } from 'react-router-dom'
+import { Auth0ProviderWithHistory } from './Auth0ProviderWithHistory'
 
-render(<HelloWorld />, document.getElementById("root"));
+render(
+  <BrowserRouter>
+    <Auth0ProviderWithHistory>
+      <App />
+    </Auth0ProviderWithHistory>
+  </BrowserRouter>,
+  document.getElementById('root'),
+)
