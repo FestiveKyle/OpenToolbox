@@ -9,8 +9,8 @@ require('dotenv').config()
 
 const { ARANGO_ROOT_PASSWORD, ARANGO_URL, ARANGO_DATABASE_NAME } = process.env
 
-// connect to database, ensure required database and collections exist
-;(async () => {
+const setUpDatabase = async () => {
+  // connect to database, ensure required database and collections exist
   const systemDb = new Database({
     url: ARANGO_URL,
     auth: { username: 'root', password: ARANGO_ROOT_PASSWORD },
@@ -52,31 +52,39 @@ const { ARANGO_ROOT_PASSWORD, ARANGO_URL, ARANGO_DATABASE_NAME } = process.env
       }
     }
   }
+}
+
+const runServer = async () => {
+  await setUpDatabase()
+
+  const app = express()
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: true }))
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
+  app.use(
+    session({ secret: 'secretcode', resave: true, saveUninitialized: true }),
+  )
+  app.use(cookieParser('secretcode'))
+
+  app.post('/login', (req, res) => {
+    console.log(req.body)
+  })
+  app.post('/register', (req, res) => {
+    console.log(req.body)
+  })
+  app.post('/logout', (req, res) => {
+    console.log(req.body)
+  })
+  app.post('/user', (req, res) => {
+    console.log(req.body)
+  })
+
+  const port = process.env.PORT || 4000
+  app.listen(port, () => {
+    console.log(`listening on port ${port}`)
+  })
+}
+
+;(async () => {
+  await runServer()
 })()
-
-const app = express()
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
-app.use(
-  session({ secret: 'secretcode', resave: true, saveUninitialized: true }),
-)
-app.use(cookieParser('secretcode'))
-
-app.post('/login', (req, res) => {
-  console.log(req.body)
-})
-app.post('/register', (req, res) => {
-  console.log(req.body)
-})
-app.post('/logout', (req, res) => {
-  console.log(req.body)
-})
-app.post('/user', (req, res) => {
-  console.log(req.body)
-})
-
-const port = process.env.PORT || 4000
-app.listen(port, () => {
-  console.log(`listening on port ${port}`)
-})
