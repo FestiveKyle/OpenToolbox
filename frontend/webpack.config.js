@@ -1,15 +1,7 @@
 const path = require('path')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
-const { ProvidePlugin, DefinePlugin } = require('webpack')
-const dotenv = require('dotenv')
 
 module.exports = () => {
-  const env = dotenv.config().parsed
-  const envKeys = Object.keys(env).reduce((prev, next) => {
-    prev[`process.env.${next}`] = JSON.stringify(env[next])
-    return prev
-  }, {})
-
   return {
     output: {
       path: path.resolve(__dirname, 'build'),
@@ -53,8 +45,6 @@ module.exports = () => {
       new HtmlWebPackPlugin({
         template: './src/index.html',
       }),
-      new ProvidePlugin({ process: 'process/browser' }),
-      new DefinePlugin(envKeys),
     ],
   }
 }

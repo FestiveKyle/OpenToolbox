@@ -1,13 +1,39 @@
 import express from 'express'
 import passport from 'passport'
+import redis from 'redis'
 import session from 'express-session'
-const cors = require('cors')
+import { v4 as uuidv4 } from 'uuid'
 import cookieParser from 'cookie-parser'
-const LocalStrategy = require('passport-local').Strategy
-import { Database, aql } from 'arangojs'
-require('dotenv').config()
+import { aql, Database } from 'arangojs'
+import { GraphQLLocalStrategy, buildContext } from 'graphql-passport'
+import { typeDefs } from './src/graphql/types'
+const { resolvers } = require('./src/graphql/resolvers')
+const expressPlayground =
+  require('graphql-playground-middleware-express').default
 
-const { ARANGO_ROOT_PASSWORD, ARANGO_URL, ARANGO_DATABASE_NAME } = process.env
+import { ApolloServer } from 'apollo-server-express'
+const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
+import http from 'http'
+
+const cors = require('cors')
+
+require('dotenv').config()
+const {
+  ARANGO_ROOT_PASSWORD,
+  ARANGO_URL,
+  ARANGO_DATABASE_NAME,
+  API_URL,
+  API_PORT,
+  FRONTEND_URL,
+  FRONTEND_PORT,
+  SESSION_SECRET,
+  REDIS_PASSWORD,
+} = process.env
+
+let RedisStore = require('connect-redis')(session)
+let redisClient = redis.createClient({ password: REDIS_PASSWORD })
+
+const { makeExecutableSchema } = require('@graphql-tools/schema')
 
 const setUpDatabase = async () => {
   // connect to database, ensure required database and collections exist
@@ -52,37 +78,82 @@ const setUpDatabase = async () => {
       }
     }
   }
+
+  return db
 }
 
 const runServer = async () => {
-  await setUpDatabase()
+  const db = await setUpDatabase()
+
+  passport.serializeUser((user, done) => {
+    done(null, user.id)
+  })
+
+  passport.deserializeUser((id, done) => {
+    const matchingUser = db.query(
+      aql`FOR user IN users FILTER user._id == ${id} RETURN user`,
+    )
+    done(null, matchingUser)
+  })
+
+  passport.use(
+    new GraphQLLocalStrategy((email, password, done) => {
+      const user = db.query(
+        aql`FOR user IN users FILTER user.email == ${email} RETURN user`,
+      )
+      if (!user) {
+        console.log(`Attempted login for user that does not exist: ${email}`)
+        return done(new Error('Email or password are incorrect.'))
+      }
+      if (user?.password !== password) {
+        console.log(`Incorrect password given during login for user: ${email}`)
+        return done(new Error('Email or password are incorrect.'))
+      }
+      done(null, user)
+    }),
+  )
 
   const app = express()
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
   app.use(
-    session({ secret: 'secretcode', resave: true, saveUninitialized: true }),
+    cors({ origin: `${FRONTEND_URL}:${FRONTEND_PORT}`, credentials: true }),
   )
+  app.use(
+    session({
+      store: new RedisStore({ client: redisClient }),
+      genid: (req) => uuidv4(),
+      secret: SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: true },
+    }),
+  )
+  app.use(passport.initialize())
+  app.use(passport.session())
   app.use(cookieParser('secretcode'))
 
-  app.post('/login', (req, res) => {
-    console.log(req.body)
-  })
-  app.post('/register', (req, res) => {
-    console.log(req.body)
-  })
-  app.post('/logout', (req, res) => {
-    console.log(req.body)
-  })
-  app.post('/user', (req, res) => {
-    console.log(req.body)
-  })
+  app.get(
+    '/graphql',
+    expressPlayground({
+      endpoint: '/graphql',
+    }),
+  )
 
-  const port = process.env.PORT || 4000
-  app.listen(port, () => {
-    console.log(`listening on port ${port}`)
+  const httpServer = http.createServer(app)
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req, res }) => buildContext({ req, res, db }),
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    introspection: true,
+    playground: true,
   })
+  await server.start()
+  server.applyMiddleware({ app, path: '/graphql' })
+
+  await new Promise((resolve) => httpServer.listen(4000, resolve))
+  console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
 }
 
 ;(async () => {

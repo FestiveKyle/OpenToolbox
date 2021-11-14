@@ -9,3 +9,10 @@ services:
       - ${DB_MOUNT_LOCATION}/arangodb3-apps:/var/lib/arangodb3-apps
     environment:
       - ARANGO_ROOT_PASSWORD=${ARANGO_ROOT_PASSWORD}
+
+  redis:
+    image: bitnami/redis
+    ports:
+      - '6379:6379'
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
