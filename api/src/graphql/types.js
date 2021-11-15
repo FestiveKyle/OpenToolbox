@@ -58,6 +58,10 @@ export const typeDefs = /* GraphQL */ `
     date: Int
   }
 
+  type AuthPayload {
+    user: User
+  }
+
   enum Privacy {
     PUBLIC
     PRIVATE
@@ -65,14 +69,12 @@ export const typeDefs = /* GraphQL */ `
 
   type Query {
     tools: [Tool]
-  }
-
-  type AuthPayload {
-    user: User
+    currentUser: User
   }
 
   type Mutation {
     login(email: String!, password: String!): AuthPayload
+    logout: Boolean
     signup(
       firstName: String!
       lastName: String!
