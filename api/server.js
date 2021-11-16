@@ -86,21 +86,25 @@ const runServer = async () => {
   const db = await setUpDatabase()
 
   passport.serializeUser((user, done) => {
-    done(null, user.id)
+    done(null, user._id)
   })
 
-  passport.deserializeUser((id, done) => {
-    const matchingUser = db.query(
-      aql`FOR user IN users FILTER user._id == ${id} RETURN user`,
-    )
+  passport.deserializeUser(async (id, done) => {
+    const matchingUser = await (
+      await db.query(
+        aql`FOR user IN users FILTER user._id == ${id} RETURN user`,
+      )
+    ).next()
     done(null, matchingUser)
   })
 
   passport.use(
-    new GraphQLLocalStrategy((email, password, done) => {
-      const user = db.query(
-        aql`FOR user IN users FILTER user.email == ${email} RETURN user`,
-      )
+    new GraphQLLocalStrategy(async (email, password, done) => {
+      const user = await (
+        await db.query(
+          aql`FOR user IN users FILTER user.email == ${email} RETURN user`,
+        )
+      ).next()
       if (!user) {
         console.log(`Attempted login for user that does not exist: ${email}`)
         return done(new Error('Email or password are incorrect.'))
@@ -109,6 +113,7 @@ const runServer = async () => {
         console.log(`Incorrect password given during login for user: ${email}`)
         return done(new Error('Email or password are incorrect.'))
       }
+      // user and password matches, return user
       done(null, user)
     }),
   )
@@ -126,12 +131,16 @@ const runServer = async () => {
       secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: true },
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'development' ? false : true,
+        sameSite: true,
+      },
     }),
   )
   app.use(passport.initialize())
   app.use(passport.session())
-  app.use(cookieParser('secretcode'))
+  // app.use(cookieParser('secretcode'))
 
   app.get(
     '/graphql',

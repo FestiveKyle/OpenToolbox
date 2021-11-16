@@ -1,17 +1,17 @@
 export const typeDefs = /* GraphQL */ `
   type User {
-    id: Int!
+    _id: String!
     """
     The user's name
     """
-    firstName: String
-    lastName: String
-    email: String
-    password: String
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
     tools: [Tool]
     friends: [User]
     friendRequests: [FriendRequest]
-    privacy: String
+    privacy: String!
   }
 
   type Tool {
