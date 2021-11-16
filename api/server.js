@@ -122,7 +122,10 @@ const runServer = async () => {
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(
-    cors({ origin: `${FRONTEND_URL}:${FRONTEND_PORT}`, credentials: true }),
+    cors({
+      origin: `${FRONTEND_URL}:${FRONTEND_PORT}`,
+      credentials: true,
+    }),
   )
   app.use(
     session({
@@ -159,7 +162,7 @@ const runServer = async () => {
     playground: true,
   })
   await server.start()
-  server.applyMiddleware({ app, path: '/graphql' })
+  server.applyMiddleware({ app, path: '/graphql', cors: false })
 
   await new Promise((resolve) => httpServer.listen(4000, resolve))
   console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)

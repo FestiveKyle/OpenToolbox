@@ -6,30 +6,35 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Select,
   Text,
 } from '@chakra-ui/react'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import axios from 'axios'
+import { useMutation } from '@apollo/client'
+import { SIGN_UP } from './graphql/mutations'
 
 export const RegisterForm = () => {
-  const registerUser = async ({ email, name, password }) => {
-    let registerResponse
-    try {
-      registerResponse = await axios({
-        method: 'post',
-        data: { email, name, password },
-        withCredentials: true,
-        url: 'http://localhost:4000/register',
-      })
-    } catch (err) {
-      alert(err)
-      console.log(err)
-      return
-    }
+  const [signUp, { data, loading, error }] = useMutation(SIGN_UP, {
+    onCompleted: (data) => {
+      console.log(data)
+    },
+    onError: (error) => {
+      console.error(error)
+    },
+  })
 
-    console.log(registerResponse)
+  const registerUser = async ({
+    email,
+    firstName,
+    lastName,
+    password,
+    privacy,
+  }) => {
+    await signUp({
+      variables: { email, firstName, lastName, password, privacy },
+    })
   }
 
   const schema = yup.object({
@@ -37,12 +42,14 @@ export const RegisterForm = () => {
       .string()
       .required('Email is required.')
       .email('Must enter a valid email.'),
-    name: yup.string().required('Name is required.'),
+    firstName: yup.string().required('First name is required.'),
+    lastName: yup.string().required('Last name is required.'),
     password: yup
       .string()
       .required('Password is required')
       .min(8, 'Password must be at least 8 characters long')
       .max(24, 'Password can be at most 24 characters long.'),
+    privacy: yup.string().required('Privacy is required.'),
   })
 
   const {
@@ -51,6 +58,7 @@ export const RegisterForm = () => {
     formState: { errors },
     reset,
   } = useForm({ resolver: yupResolver(schema) })
+
   return (
     <form onSubmit={handleSubmit(registerUser)}>
       <Flex flexDirection="column">
@@ -65,15 +73,25 @@ export const RegisterForm = () => {
           />
           <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={errors.name}>
-          <FormLabel htmlFor="name">Name:</FormLabel>
+        <FormControl isInvalid={errors.firstName}>
+          <FormLabel htmlFor="firstName">First name:</FormLabel>
           <Input
-            {...register('name', { required: true })}
-            placeholder="Name"
+            {...register('firstName', { required: true })}
+            placeholder="First name"
             bg="white"
             maxW="50ch"
           />
-          <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.firstName?.message}</FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={errors.lastName}>
+          <FormLabel htmlFor="lastName">Last name:</FormLabel>
+          <Input
+            {...register('lastName', { required: true })}
+            placeholder="Last name"
+            bg="white"
+            maxW="50ch"
+          />
+          <FormErrorMessage>{errors.lastName?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={errors.password}>
           <FormLabel htmlFor="password">Password:</FormLabel>
@@ -86,7 +104,20 @@ export const RegisterForm = () => {
           />
           <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
         </FormControl>
-        <Button type="submit" w="min-content">
+        <FormControl isInvalid={errors.privacy}>
+          <FormLabel htmlFor="privacy">Privacy:</FormLabel>
+          <Select
+            placeholder="Select privacy"
+            bg="white"
+            w="fit-content"
+            {...register('privacy', { required: true })}
+          >
+            <option value="PUBLIC">Public</option>
+            <option value="PRIVATE">Private</option>
+          </Select>
+          <FormErrorMessage>{errors.privacy?.message}</FormErrorMessage>
+        </FormControl>
+        <Button type="submit" w="min-content" mt="1rem">
           Register
         </Button>
       </Flex>

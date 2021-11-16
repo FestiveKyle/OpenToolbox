@@ -4,10 +4,17 @@ import { App } from './App'
 import { BrowserRouter } from 'react-router-dom'
 import { ChakraProvider } from '@chakra-ui/react'
 import { theme } from './theme'
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import {
+  ApolloClient,
+  ApolloProvider,
+  createHttpLink,
+  HttpLink,
+  InMemoryCache,
+} from '@apollo/client'
 
 const apolloClient = new ApolloClient({
-  uri: '/graphql',
+  uri: 'http://localhost:4000/graphql',
+  credentials: 'include',
   cache: new InMemoryCache(),
 })
 

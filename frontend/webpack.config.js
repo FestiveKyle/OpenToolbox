@@ -15,7 +15,7 @@ module.exports = () => {
     },
     devServer: {
       port: 3000,
-      host: '0.0.0.0',
+      host: 'localhost',
       hot: true,
       historyApiFallback: { disableDotRule: true },
     },
