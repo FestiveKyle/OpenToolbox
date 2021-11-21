@@ -14,6 +14,7 @@ const expressPlayground =
 import { ApolloServer } from 'apollo-server-express'
 const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
 import http from 'http'
+import bcrypt from 'bcrypt'
 
 const cors = require('cors')
 
@@ -54,6 +55,7 @@ const setUpDatabase = async () => {
   const requiredCollectionTypes = {
     users: 'document',
     tools: 'document',
+    toolClaims: 'edge',
     friendRequests: 'edge',
     loans: 'edge',
     locations: 'document',
@@ -78,6 +80,9 @@ const setUpDatabase = async () => {
       }
     }
   }
+
+  // create indexes
+  // db.
 
   return db
 }
@@ -109,10 +114,11 @@ const runServer = async () => {
         console.log(`Attempted login for user that does not exist: ${email}`)
         return done(new Error('Email or password are incorrect.'))
       }
-      if (user?.password !== password) {
+      if (!bcrypt.compareSync(password, user?.password)) {
         console.log(`Incorrect password given during login for user: ${email}`)
         return done(new Error('Email or password are incorrect.'))
       }
+      console.log(`User successfully logged in: ${email}`)
       // user and password matches, return user
       done(null, user)
     }),

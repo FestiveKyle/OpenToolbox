@@ -11,6 +11,7 @@ import {
   HttpLink,
   InMemoryCache,
 } from '@apollo/client'
+import { UserStateProvider } from './hooks/useUserState'
 
 const apolloClient = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
@@ -20,11 +21,13 @@ const apolloClient = new ApolloClient({
 
 render(
   <ApolloProvider client={apolloClient}>
-    <BrowserRouter>
-      <ChakraProvider theme={theme}>
-        <App />
-      </ChakraProvider>
-    </BrowserRouter>
+    <UserStateProvider>
+      <BrowserRouter>
+        <ChakraProvider theme={theme}>
+          <App />
+        </ChakraProvider>
+      </BrowserRouter>
+    </UserStateProvider>
   </ApolloProvider>,
   document.getElementById('root'),
 )

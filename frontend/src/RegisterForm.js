@@ -16,27 +16,6 @@ import { useMutation } from '@apollo/client'
 import { SIGN_UP } from './graphql/mutations'
 
 export const RegisterForm = () => {
-  const [signUp, { data, loading, error }] = useMutation(SIGN_UP, {
-    onCompleted: (data) => {
-      console.log(data)
-    },
-    onError: (error) => {
-      console.error(error)
-    },
-  })
-
-  const registerUser = async ({
-    email,
-    firstName,
-    lastName,
-    password,
-    privacy,
-  }) => {
-    await signUp({
-      variables: { email, firstName, lastName, password, privacy },
-    })
-  }
-
   const schema = yup.object({
     email: yup
       .string()
@@ -58,6 +37,33 @@ export const RegisterForm = () => {
     formState: { errors },
     reset,
   } = useForm({ resolver: yupResolver(schema) })
+
+  const [signUp, { data, loading, error }] = useMutation(SIGN_UP, {
+    onCompleted: () => {
+      reset({
+        email: '',
+        firstName: '',
+        lastName: '',
+        password: '',
+        privacy: '',
+      })
+    },
+    onError: (error) => {
+      console.error(error)
+    },
+  })
+
+  const registerUser = async ({
+    email,
+    firstName,
+    lastName,
+    password,
+    privacy,
+  }) => {
+    await signUp({
+      variables: { email, firstName, lastName, password, privacy },
+    })
+  }
 
   return (
     <form onSubmit={handleSubmit(registerUser)}>

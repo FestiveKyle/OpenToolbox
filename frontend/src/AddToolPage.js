@@ -1,4 +1,8 @@
 import React from 'react'
+import * as yup from 'yup'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useUserState } from './hooks/useUserState'
 import {
   Button,
   Flex,
@@ -8,25 +12,15 @@ import {
   Input,
   Text,
 } from '@chakra-ui/react'
-import * as yup from 'yup'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@apollo/client'
-import { LOG_IN, SIGN_UP } from './graphql/mutations'
-import { GET_CURRENT_USER } from './graphql/queries'
-import { useUserState } from './hooks/useUserState'
 
-export const LoginForm = () => {
+const AddToolPage = () => {
   const schema = yup.object({
-    email: yup
-      .string()
-      .required('Email is required.')
-      .email('Must enter a valid email.'),
-    password: yup
-      .string()
-      .required('Password is required')
-      .min(8, 'Password must be at least 8 characters long')
-      .max(24, 'Password can be at most 24 characters long.'),
+    name: yup.string().required('Name is required.'),
+    brand: yup.string(),
+    color: yup.string(),
+    description: yup.string(),
+    privacy: yup.string().oneOf(['PUBLIC', 'FRIENDS', 'PRIVATE']),
   })
 
   const {
@@ -35,17 +29,6 @@ export const LoginForm = () => {
     formState: { errors },
     reset,
   } = useForm({ resolver: yupResolver(schema) })
-
-  const { login } = useUserState()
-
-  const logInUser = async ({ email, password }) => {
-    await login({
-      variables: { email, password },
-      onCompleted: () => {
-        reset()
-      },
-    })
-  }
 
   return (
     <form onSubmit={handleSubmit(logInUser)}>
@@ -79,3 +62,5 @@ export const LoginForm = () => {
     </form>
   )
 }
+
+export default AddToolPage
