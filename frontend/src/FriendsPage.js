@@ -23,6 +23,7 @@ const FriendsPage = () => {
             return (
               <FriendCard
                 key={`friendCard-${idx}`}
+                friendId={friend._id}
                 firstName={friend.firstName}
                 lastName={friend.lastName}
               />

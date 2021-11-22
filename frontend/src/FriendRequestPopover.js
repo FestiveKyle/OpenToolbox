@@ -66,8 +66,8 @@ const FriendRequestPopover = ({ ...props }) => {
                     aria-label=""
                     ml="auto"
                     icon={<CheckIcon />}
-                    onClick={() => {
-                      answerFriendRequest({
+                    onClick={async () => {
+                      await answerFriendRequest({
                         variables: {
                           answer: 'ACCEPT',
                           friendRequestId: friendRequest._id,
@@ -79,8 +79,8 @@ const FriendRequestPopover = ({ ...props }) => {
                     aria-label=""
                     ml="0.5rem"
                     icon={<CloseIcon />}
-                    onClick={() => {
-                      answerFriendRequest({
+                    onClick={async () => {
+                      await answerFriendRequest({
                         variables: {
                           answer: 'REJECT',
                           friendRequestId: friendRequest._id,

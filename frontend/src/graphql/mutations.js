@@ -83,3 +83,11 @@ export const ANSWER_FRIEND_REQUEST = gql`
     }
   }
 `
+
+export const REMOVE_FRIEND = gql`
+  mutation RemoveFriend($friendId: String!) {
+    removeFriend(friendId: $friendId) {
+      _id
+    }
+  }
+`

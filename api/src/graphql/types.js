@@ -84,6 +84,7 @@ export const typeDefs = /* GraphQL */ `
       friendRequestId: String
     ): FriendRequest
     addFriend(friendId: String!): String
+    removeFriend(friendId: String!): User
     login(email: String!, password: String!): AuthPayload
     logout: String
     signup(

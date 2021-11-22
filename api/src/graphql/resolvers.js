@@ -112,6 +112,51 @@ export const resolvers = {
     },
   },
   Mutation: {
+    removeFriend: async (parent, { friendId }, context) => {
+      const currentUser = context.getUser()
+
+      if (!currentUser) {
+        console.log(`Attempt to remove friend without user account`)
+        throw new Error(`Unable to find your account, please log in`)
+      }
+
+      // grab friend
+      let friendConnection
+      try {
+        friendConnection = await (
+          await context.db.query(aql`
+            WITH users
+            FOR vertex, edge IN 1..1 ANY ${currentUser._id} friends FILTER vertex._id == ${friendId} RETURN {vertex, edge} `)
+        ).next()
+      } catch (error) {
+        console.log(
+          `Error when retrieving friend when "${currentUser._id}" attempted to remove friend "${friendId}": ${error}`,
+        )
+        throw new Error(`Unable to remove this friend`)
+      }
+      if (!friendConnection) {
+        console.log(
+          `User "${currentUser._id}" attempted to remove non-friend "${friendId}"`,
+        )
+        throw new Error(`You are not friends with this user`)
+      }
+
+      // remove friendEdge
+      try {
+        await context.db.collection('friends').remove(friendConnection.edge._id)
+      } catch (error) {
+        console.log(
+          `Error when user "${currentUser._id}" tried to remove friend "${friendId}": ${error}`,
+        )
+        throw new Error(`Error when removing this friend`)
+      }
+
+      console.log(
+        `User "${currentUser._id}" successfully removed friend "${friendId}"`,
+      )
+
+      return friendConnection.vertex
+    },
     answerFriendRequest: async (
       parent,
       { answer, friendRequestId },
