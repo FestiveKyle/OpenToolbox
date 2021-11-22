@@ -17,10 +17,6 @@ export const GET_MY_TOOLS = gql`
       name
       brand
       description
-      owner {
-        firstName
-        lastName
-      }
     }
   }
 `
@@ -54,6 +50,17 @@ export const GET_USERS = gql`
       _id
       firstName
       lastName
+    }
+  }
+`
+
+export const GET_TOOLS = gql`
+  query GetTools($offset: Int, $limit: Int, $search: String) {
+    getTools(offset: $offset, limit: $limit, search: $search) {
+      _id
+      name
+      brand
+      description
     }
   }
 `

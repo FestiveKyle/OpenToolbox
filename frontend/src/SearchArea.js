@@ -10,20 +10,29 @@ import {
 } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
 import { useQuery } from '@apollo/client'
-import { GET_USERS } from './graphql/queries'
+import { GET_TOOLS, GET_USERS } from './graphql/queries'
 import FriendCard from './FriendCard'
 import UserCard from './UserCard'
+import ToolCard from './ToolCard'
 
 const SearchArea = () => {
   const [search, setSearch] = useState('')
 
-  const { loading, error, data } = useQuery(GET_USERS, {
+  const {
+    loading: getUsersLoading,
+    error: getUsersError,
+    data: getUserData,
+  } = useQuery(GET_USERS, {
     variables: { search: search },
   })
 
-  useEffect(() => {
-    console.log(data)
-  }, [data])
+  const {
+    loading: getToolsLoading,
+    error: getToolsError,
+    data: getToolsData,
+  } = useQuery(GET_TOOLS, {
+    variables: { search: search },
+  })
 
   return (
     <Flex flexDirection="column" width="100%">
@@ -44,7 +53,7 @@ const SearchArea = () => {
       </Heading>
 
       <Grid gridTemplateColumns="repeat(3, 1fr)" gap="1rem">
-        {data?.getUsers.map((user, idx) => {
+        {getUserData?.getUsers.map((user, idx) => {
           return (
             <UserCard
               key={`userCard-${idx}`}
@@ -61,6 +70,20 @@ const SearchArea = () => {
       <Heading as="h2" textAlign="center" mb="2rem">
         Tools
       </Heading>
+
+      <Grid gridTemplateColumns="repeat(3, 1fr)" gap="1rem">
+        {getToolsData?.getTools.map((tool, idx) => {
+          return (
+            <ToolCard
+              key={`userCard-${idx}`}
+              id={tool.id}
+              name={tool.name}
+              description={tool.description}
+              brand={tool.brand}
+            />
+          )
+        })}
+      </Grid>
     </Flex>
   )
 }
