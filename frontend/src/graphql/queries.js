@@ -24,3 +24,13 @@ export const GET_MY_TOOLS = gql`
     }
   }
 `
+
+export const GET_MY_FRIENDS = gql`
+  query GetMyFriends {
+    getMyFriends {
+      _id
+      firstName
+      lastName
+    }
+  }
+`

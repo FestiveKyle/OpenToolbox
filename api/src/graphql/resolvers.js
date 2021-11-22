@@ -26,7 +26,7 @@ export const resolvers = {
         throw new Error(`Error while retrieving friend requests`)
       }
     },
-    getFriends: (parent, { offset, limit }, context) => {
+    getMyFriends: async (parent, { offset, limit }, context) => {
       const currentUser = context.getUser()
 
       if (!currentUser) {
@@ -34,9 +34,35 @@ export const resolvers = {
         throw new Error(`Unable to find your account, please log in`)
       }
 
-      context.db.query(aql`
-        
-      `)
+      // get friends
+      let friends
+      try {
+        console.log(
+          `User "${currentUser._id}" attempting to retrieve their friends`,
+        )
+        friends = await (
+          await context.db.query(aql`
+            WITH users, friends
+            FOR vertex, edge IN 1..1 ANY ${currentUser._id} friends RETURN {
+            "_id": vertex._id,
+            "firstName": vertex.firstName,
+            "lastName": vertex.lastName }  
+            `)
+        ).all()
+      } catch (error) {
+        console.log(
+          `Error while user "${currentUser._id}" attempted to retrieve their friends: ${error}`,
+        )
+        throw new Error(
+          `Error while retrieving your friends, please try again.`,
+        )
+      }
+
+      console.log(
+        `User "${currentUser._id}" successfully retrieved their friends`,
+      )
+
+      return friends
     },
     getMyTools: async (parent, { offset, limit }, context) => {
       const currentUser = context.getUser()
@@ -71,7 +97,6 @@ export const resolvers = {
         `User "${currentUser._id}" successfully retrieved their tools`,
       )
 
-      console.log(JSON.stringify(tools))
       return tools
     },
   },

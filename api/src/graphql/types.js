@@ -2,13 +2,13 @@ export const typeDefs = /* GraphQL */ `
   type User {
     _id: String!
     "The user's name"
-    firstName: String!
-    lastName: String!
-    email: String!
+    firstName: String
+    lastName: String
+    email: String
     tools: [Tool]
     friends: [User]
     friendRequests: [FriendRequest]
-    privacy: String!
+    privacy: String
   }
 
   type Tool {
@@ -74,8 +74,8 @@ export const typeDefs = /* GraphQL */ `
     tools: [Tool]
     currentUser: User
     getFriendRequests: [FriendRequest]
-    getFriends(offset: Int!, limit: Int!): [User]
-    getMyTools: [Tool]
+    getMyFriends(offset: Int, limit: Int): [User]
+    getMyTools(offset: Int, limit: Int): [Tool]
   }
 
   type Mutation {
