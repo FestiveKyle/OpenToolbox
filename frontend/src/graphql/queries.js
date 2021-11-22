@@ -9,3 +9,14 @@ export const GET_CURRENT_USER = gql`
     }
   }
 `
+
+export const GET_MY_TOOLS = gql`
+  query GetMyTools {
+    getMyTools {
+      _id
+      name
+      brand
+      description
+    }
+  }
+`

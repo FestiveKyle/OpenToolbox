@@ -75,6 +75,7 @@ export const typeDefs = /* GraphQL */ `
     currentUser: User
     getFriendRequests: [FriendRequest]
     getFriends(offset: Int!, limit: Int!): [User]
+    getMyTools: [Tool]
   }
 
   type Mutation {

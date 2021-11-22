@@ -5,17 +5,20 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useUserState } from './hooks/useUserState'
 import {
   Button,
+  Divider,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Grid,
+  Heading,
   Input,
   Text,
 } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import { ADD_TOOL } from './graphql/mutations'
 
-const AddToolPage = () => {
+const ToolboxPage = () => {
   const schema = yup.object({
     name: yup.string().required('Name is required.'),
     brand: yup.string(),
@@ -42,9 +45,9 @@ const AddToolPage = () => {
   }
 
   return (
-    <Flex mx="auto" my="2rem">
-      <form onSubmit={handleSubmit(addTool)}>
-        <Flex flexDirection="column">
+    <Flex mx="auto" my="2rem" flexDirection="column" w="100%">
+      <Flex flexDirection="column" mx="auto">
+        <form onSubmit={handleSubmit(addTool)}>
           <Text fontWeight="bold">Add tool</Text>
           <FormControl isInvalid={errors.name}>
             <FormLabel htmlFor="name">Tool name:</FormLabel>
@@ -78,14 +81,20 @@ const AddToolPage = () => {
             />
             <FormErrorMessage>{errors.brand?.message}</FormErrorMessage>
           </FormControl>
-
           <Button type="submit" w="min-content" mt="1rem">
-            Login
-          </Button>
-        </Flex>
-      </form>
+            Add tool
+          </Button>{' '}
+        </form>
+      </Flex>
+
+      <Divider orientation="horizontal" my="2rem" />
+
+      <Heading as="h2" textAlign="center">
+        Your Tools
+      </Heading>
+      <Grid gridTemplateColumns="repeat(3, 1fr)"></Grid>
     </Flex>
   )
 }
 
-export default AddToolPage
+export default ToolboxPage

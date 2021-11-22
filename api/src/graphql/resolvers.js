@@ -38,6 +38,42 @@ export const resolvers = {
         
       `)
     },
+    getMyTools: async (parent, { offset, limit }, context) => {
+      const currentUser = context.getUser()
+
+      if (!currentUser) {
+        console.log(`Attempt to get tools without user account`)
+        throw new Error(`Unable to find your account, please log in`)
+      }
+
+      // get tools
+      let tools
+      try {
+        console.log(
+          `User "${currentUser._id}" attempting to retrieve their tools`,
+        )
+        tools = await (
+          await context.db.query(aql`
+            WITH users, tools
+            FOR vertex, edge IN 1..1 OUTBOUND ${currentUser._id} toolClaims RETURN MERGE(
+              vertex,
+              { "owner": ${currentUser} })
+            `)
+        ).all()
+      } catch (error) {
+        console.log(
+          `Error while user "${currentUser._id}" attempted to retrieve their tools: ${error}`,
+        )
+        throw new Error(`Error while retrieving your tools, please try again.`)
+      }
+
+      console.log(
+        `User "${currentUser._id}" successfully retrieved their tools`,
+      )
+
+      console.log(JSON.stringify(tools))
+      return tools
+    },
   },
   Mutation: {
     answerFriendRequest: async (
@@ -197,7 +233,7 @@ export const resolvers = {
             AND friendRequest._to == ${friendId} 
             REMOVE friendRequest IN friendRequests
         `)
-        ).next()
+        ).all()
       } catch (error) {
         console.log(
           `Error when user "${currentUser._id}" attempted to add new friend "${friendId}" during removal of all friend requests: ${error}`,
@@ -234,7 +270,14 @@ export const resolvers = {
     ) => {
       const currentUser = context.getUser()
 
-      const toolInfo = { name, color, brand, photos, description, privacy }
+      const toolInfo = {
+        name,
+        color,
+        brand,
+        photos,
+        description,
+        privacy,
+      }
       let newTool
       try {
         console.log(`User "${currentUser._id}" attempting to insert new tool`)

@@ -8,11 +8,12 @@ import {
   Routes,
 } from 'react-router-dom'
 import { Link } from '@chakra-ui/react'
-import AddToolPage from './AddToolPage'
+import ToolboxPage from './ToolboxPage'
 import { LoginPage } from './LoginPage'
 import { RegisterPage } from './RegisterPage'
 import PrivatePage from './PrivatePage'
 import { HomePage } from './HomePage'
+import FriendsPage from './FriendsPage'
 
 export const App = () => {
   const headerRef = useRef()
@@ -20,14 +21,14 @@ export const App = () => {
   return (
     <Flex flexDirection="column" minH="100vh">
       <Header headerRef={headerRef} />
-      <Flex as="main" h="100%" flexGrow="1">
+      <Flex as="main" h="100%" flexGrow="1" px="2rem">
         <Routes>
           <Route path="/" element={<HomePage />} exact={true} />
           <Route
-            path="/add-tool"
+            path="/toolbox"
             element={
               <PrivatePage>
-                <AddToolPage />
+                <ToolboxPage />
               </PrivatePage>
             }
           />
@@ -38,6 +39,14 @@ export const App = () => {
                 headerRef={headerRef}
                 headerHeight={headerRef?.current?.contentHeight}
               />
+            }
+          />
+          <Route
+            path="/friends"
+            element={
+              <PrivatePage>
+                <FriendsPage />
+              </PrivatePage>
             }
           />
           <Route path="/register" element={<RegisterPage />} />

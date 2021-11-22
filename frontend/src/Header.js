@@ -68,8 +68,12 @@ export const Header = ({ headerRef }) => {
               Home
             </Button>
 
-            <Button as={RouteLink} to="/add-tool">
-              Add tool
+            <Button as={RouteLink} to="/toolbox" mr="2rem">
+              Toolbox
+            </Button>
+
+            <Button as={RouteLink} to="/friends">
+              Friends
             </Button>
           </Flex>
         </>
