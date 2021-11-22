@@ -15,7 +15,7 @@ export const typeDefs = /* GraphQL */ `
   }
 
   type Tool {
-    _id: Int!
+    _id: String!
     name: String
     color: String
     brand: String
@@ -28,14 +28,14 @@ export const typeDefs = /* GraphQL */ `
   }
 
   type FriendRequest {
-    _id: Int!
+    _id: String!
     from: User
     to: User
     time: Int
   }
 
   type Loan {
-    _id: Int!
+    _id: String!
     from: User
     to: User
     dateRequested: Int
@@ -45,14 +45,14 @@ export const typeDefs = /* GraphQL */ `
   }
 
   type Location {
-    _id: Int!
+    _id: String!
     user: User
     location: String
     date: Int
   }
 
   type Note {
-    _id: Int!
+    _id: String!
     user: User
     note: String
     date: Int
@@ -68,12 +68,20 @@ export const typeDefs = /* GraphQL */ `
     PRIVATE
   }
 
+  enum RequestAnswer {
+    ACCEPT
+    REJECT
+  }
+
   type Query {
     tools: [Tool]
     currentUser: User
+    getFriends(offset: Int!, limit: Int!): [User]
   }
 
   type Mutation {
+    answerFriendRequest(answer: RequestAnswer!, friendRequestId: String): String
+    addFriend(friendId: String!): String
     login(email: String!, password: String!): AuthPayload
     logout: Boolean
     signup(
@@ -84,7 +92,7 @@ export const typeDefs = /* GraphQL */ `
       privacy: Privacy!
     ): AuthPayload
     addTool(
-      name: String
+      name: String!
       color: String
       brand: String
       photos: [String]

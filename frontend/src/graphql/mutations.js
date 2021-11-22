@@ -46,13 +46,29 @@ export const LOG_OUT = gql`
 `
 
 export const ADD_TOOL = gql`
-  mutation AddTool($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      user {
-        ... on User {
-          ...CurrentUserFields
-        }
-      }
+  mutation AddTool(
+    $name: String!
+    $color: String
+    $brand: String
+    $photos: [String]
+    $description: String
+    $privacy: Privacy
+  ) {
+    addTool(
+      name: $name
+      color: $color
+      brand: $brand
+      photos: $photos
+      description: $description
+      privacy: $privacy
+    ) {
+      _id
+      name
+      color
+      brand
+      photos
+      description
+      privacy
     }
   }
 `

@@ -15,6 +15,10 @@ import { ApolloServer } from 'apollo-server-express'
 const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
 import http from 'http'
 import bcrypt from 'bcrypt'
+import {
+  ArangoSearchView,
+  ArangoSearchViewPropertiesOptions,
+} from 'arangojs/view'
 
 const cors = require('cors')
 
@@ -27,7 +31,7 @@ const {
   API_PORT,
   FRONTEND_URL,
   FRONTEND_PORT,
-  SESSION_SECRET,
+  SESSION_SECRETS,
   REDIS_PASSWORD,
 } = process.env
 
@@ -57,6 +61,7 @@ const setUpDatabase = async () => {
     tools: 'document',
     toolClaims: 'edge',
     friendRequests: 'edge',
+    friends: 'edge',
     loans: 'edge',
     locations: 'document',
     notes: 'document',
@@ -82,7 +87,46 @@ const setUpDatabase = async () => {
   }
 
   // create indexes
-  // db.
+
+  // create views
+  const views = (await db.listViews()).map((view) => {
+    return view.name
+  })
+  console.log('Current views in database: ', views)
+
+  const requiredViews = {
+    v_users: {
+      links: {
+        users: {
+          includeAllFields: false,
+          fields: {
+            firstName: { analyzers: ['identity'] },
+            lastName: { analyzers: ['identity'] },
+            email: { analyzers: ['identity'] },
+          },
+        },
+      },
+    },
+    v_tools: {
+      links: {
+        tools: {
+          includeAllFields: false,
+          fields: {
+            name: { analyzers: ['text_en'] },
+          },
+        },
+      },
+    },
+  }
+
+  for (const key of Object.keys(requiredViews)) {
+    // check if view exists
+    if (!views.includes(key)) {
+      console.log('adding view: ', key)
+      // view does not exist, create view
+      await db.createView(key, requiredViews[key])
+    }
+  }
 
   return db
 }
@@ -137,7 +181,7 @@ const runServer = async () => {
     session({
       store: new RedisStore({ client: redisClient }),
       genid: (req) => uuidv4(),
-      secret: SESSION_SECRET,
+      secret: SESSION_SECRETS.split(', '),
       resave: false,
       saveUninitialized: false,
       cookie: {

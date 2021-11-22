@@ -14,7 +14,7 @@ import {
 import { UserStateProvider } from './hooks/useUserState'
 
 const apolloClient = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  uri: process.env.REACT_APP_API_ENDPOINT || '/graphql',
   credentials: 'include',
   cache: new InMemoryCache(),
 })
