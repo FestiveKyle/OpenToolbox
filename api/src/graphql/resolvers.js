@@ -271,11 +271,11 @@ export const resolvers = {
       const currentUser = context.getUser()
 
       const toolInfo = {
-        name,
-        color,
-        brand,
+        name: name.trim(),
+        color: color.trim(),
+        brand: brand.trim(),
         photos,
-        description,
+        description: description.trim(),
         privacy,
       }
       let newTool
@@ -323,8 +323,8 @@ export const resolvers = {
     },
     login: async (parent, { email, password }, context) => {
       const { user } = await context.authenticate('graphql-local', {
-        email,
-        password,
+        email: email.trim(),
+        password: password.trim(),
       })
       await context.login(user)
       return { user }
@@ -346,7 +346,13 @@ export const resolvers = {
       { firstName, lastName, email, password, privacy },
       context,
     ) => {
-      const userInfo = { firstName, lastName, email, password, privacy }
+      const userInfo = {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: lastName.trim(),
+        password,
+        privacy,
+      }
       console.log(
         `User trying to create new account with info: ${JSON.stringify(
           userInfo,

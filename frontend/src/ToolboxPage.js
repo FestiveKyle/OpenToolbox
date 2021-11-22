@@ -13,12 +13,21 @@ import {
   Grid,
   Heading,
   Input,
+  Spinner,
   Text,
 } from '@chakra-ui/react'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { ADD_TOOL } from './graphql/mutations'
+import { GET_MY_TOOLS } from './graphql/queries'
+import ToolCard from './ToolCard'
 
 const ToolboxPage = () => {
+  const {
+    getMyToolLoading,
+    getMyToolError,
+    data: getMyToolsData,
+  } = useQuery(GET_MY_TOOLS)
+
   const schema = yup.object({
     name: yup.string().required('Name is required.'),
     brand: yup.string(),
@@ -43,6 +52,8 @@ const ToolboxPage = () => {
   const addTool = async ({ name, brand, color, description }) => {
     await addToolMutation({ variables: { name, brand, color, description } })
   }
+
+  console.log(getMyToolsData)
 
   return (
     <Flex mx="auto" my="2rem" flexDirection="column" w="100%">
@@ -92,7 +103,27 @@ const ToolboxPage = () => {
       <Heading as="h2" textAlign="center">
         Your Tools
       </Heading>
-      <Grid gridTemplateColumns="repeat(3, 1fr)"></Grid>
+      {getMyToolLoading ? (
+        <>
+          <Text>Loading tools</Text>
+          <Spinner size="lg" />
+        </>
+      ) : !getMyToolsData ? (
+        <Text>No tools</Text>
+      ) : (
+        <Grid gridTemplateColumns="repeat(3, 1fr)">
+          {getMyToolsData.getMyTools.map((toolData, idx) => {
+            return (
+              <ToolCard
+                key={`toolCard-${idx}`}
+                name={toolData.name}
+                brand={toolData.brand}
+                description={toolData.description}
+              />
+            )
+          })}
+        </Grid>
+      )}
     </Flex>
   )
 }
