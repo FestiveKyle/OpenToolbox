@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 export const resolvers = {
   Query: {
     currentUser: (parent, args, context) => context.getUser(),
-    getFriendRequests: async (parent, args, context) => {
+    getMyFriendRequests: async (parent, args, context) => {
       const currentUser = context.getUser()
 
       if (!currentUser) {
@@ -16,15 +16,26 @@ export const resolvers = {
       try {
         friendRequests = await (
           await context.db.query(aql`
-          FOR friendRequest IN friendRequests FILTER friendRequest._to == ${currentUser._id} RETURN friendRequest
+            WITH users
+            FOR vertex, edge IN 1..1 INBOUND ${currentUser._id} friendRequests RETURN {
+            "_id": edge._id,
+            "from": {
+              "_id": vertex._id,
+              "firstName": vertex.firstName,
+              "lastName": vertex.lastName
+            },
+            "to": ${currentUser},
+            }
         `)
-        ).next()
+        ).all()
       } catch (error) {
         console.log(
           `Error while retrieving friend requests for user "${currentUser._id}": ${error}`,
         )
         throw new Error(`Error while retrieving friend requests`)
       }
+
+      return friendRequests
     },
     getMyFriends: async (parent, { offset, limit }, context) => {
       const currentUser = context.getUser()
@@ -195,7 +206,7 @@ export const resolvers = {
           friendRequest,
         )}"`,
       )
-      return 'Friend request successfully accepted'
+      return friendRequest
     },
     addFriend: async (parent, { friendId }, context) => {
       const currentUser = context.getUser()

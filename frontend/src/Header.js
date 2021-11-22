@@ -19,14 +19,10 @@ import { useUserState } from './hooks/useUserState'
 import { Link as RouteLink } from 'react-router-dom'
 import { SearchIcon } from '@chakra-ui/icons'
 import SearchBar from './SearchBar'
+import FriendRequestPopover from './FriendRequestPopover'
 
 export const Header = ({ headerRef }) => {
   const { isLoggedIn, getUserLoading, user } = useUserState()
-
-  useEffect(() => {
-    console.log('isLoggedIn: ', isLoggedIn)
-    console.log('user: ', user)
-  }, [isLoggedIn])
 
   return (
     <Flex
@@ -75,6 +71,8 @@ export const Header = ({ headerRef }) => {
             <Button as={RouteLink} to="/friends">
               Friends
             </Button>
+
+            <FriendRequestPopover ml="auto" />
           </Flex>
         </>
       )}

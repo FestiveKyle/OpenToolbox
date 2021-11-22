@@ -6,7 +6,6 @@ import FriendCard from './FriendCard'
 
 const FriendsPage = () => {
   const { loading, error, data } = useQuery(GET_MY_FRIENDS)
-  console.log(data)
 
   return (
     <Flex mx="auto" my="2rem" flexDirection="column" w="100%">
@@ -23,6 +22,7 @@ const FriendsPage = () => {
           {data.getMyFriends.map((friend, idx) => {
             return (
               <FriendCard
+                key={`friendCard-${idx}`}
                 firstName={friend.firstName}
                 lastName={friend.lastName}
               />

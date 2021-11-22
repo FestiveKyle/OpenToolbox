@@ -72,3 +72,14 @@ export const ADD_TOOL = gql`
     }
   }
 `
+
+export const ANSWER_FRIEND_REQUEST = gql`
+  mutation AnswerFriendRequest(
+    $answer: RequestAnswer!
+    $friendRequestId: String!
+  ) {
+    answerFriendRequest(answer: $answer, friendRequestId: $friendRequestId) {
+      _id
+    }
+  }
+`

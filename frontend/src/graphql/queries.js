@@ -34,3 +34,16 @@ export const GET_MY_FRIENDS = gql`
     }
   }
 `
+
+export const GET_MY_FRIEND_REQUESTS = gql`
+  query GetMyFriendRequests {
+    getMyFriendRequests {
+      _id
+      from {
+        _id
+        firstName
+        lastName
+      }
+    }
+  }
+`

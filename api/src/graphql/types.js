@@ -73,13 +73,16 @@ export const typeDefs = /* GraphQL */ `
   type Query {
     tools: [Tool]
     currentUser: User
-    getFriendRequests: [FriendRequest]
+    getMyFriendRequests: [FriendRequest]
     getMyFriends(offset: Int, limit: Int): [User]
     getMyTools(offset: Int, limit: Int): [Tool]
   }
 
   type Mutation {
-    answerFriendRequest(answer: RequestAnswer!, friendRequestId: String): String
+    answerFriendRequest(
+      answer: RequestAnswer!
+      friendRequestId: String
+    ): FriendRequest
     addFriend(friendId: String!): String
     login(email: String!, password: String!): AuthPayload
     logout: String
