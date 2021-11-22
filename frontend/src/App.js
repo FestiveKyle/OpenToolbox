@@ -14,6 +14,7 @@ import { RegisterPage } from './RegisterPage'
 import PrivatePage from './PrivatePage'
 import { HomePage } from './HomePage'
 import FriendsPage from './FriendsPage'
+import { SearchPage } from './SearchPage'
 
 export const App = () => {
   const headerRef = useRef()
@@ -46,6 +47,14 @@ export const App = () => {
             element={
               <PrivatePage>
                 <FriendsPage />
+              </PrivatePage>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <PrivatePage>
+                <SearchPage />
               </PrivatePage>
             }
           />

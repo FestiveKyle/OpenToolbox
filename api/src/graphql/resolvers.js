@@ -110,6 +110,45 @@ export const resolvers = {
 
       return tools
     },
+    getUsers: async (parent, { offset, limit, search }, context) => {
+      const currentUser = context.getUser()
+
+      if (!currentUser) {
+        console.log(`Attempt to get users without user account`)
+        throw new Error(`Unable to find your account, please log in`)
+      }
+
+      // get users
+      let users
+      try {
+        console.log(`User "${currentUser._id}" attempting to retrieve users`)
+
+        const searchFilter = search
+          ? aql`SEARCH ANALYZER(user.firstName IN TOKENS(${search}, "text_en")
+              OR user.lastName IN TOKENS(${search}, "text_en"), "identity")`
+          : undefined
+
+        users = await (
+          await context.db.query(aql`
+            FOR user IN v_users
+            ${searchFilter}
+            RETURN {
+              "_id": user._id,
+              "firstName": user.firstName,
+              "lastName": user.lastName 
+            }`)
+        ).all()
+      } catch (error) {
+        console.log(
+          `Error while user "${currentUser._id}" attempted to retrieve users: ${error}`,
+        )
+        throw new Error(`Error while retrieving users, please try again.`)
+      }
+
+      console.log(`User "${currentUser._id}" successfully retrieved users`)
+
+      return users
+    },
   },
   Mutation: {
     removeFriend: async (parent, { friendId }, context) => {

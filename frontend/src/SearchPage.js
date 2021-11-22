@@ -2,12 +2,14 @@ import React from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 import SearchArea from './SearchArea'
 
-export const HomePage = () => {
+export const SearchPage = () => {
   return (
     <Flex flexDirection="column" w="100%">
-      <Heading textAlign="center" w="100%" mt="2rem">
-        Home Page
+      <Heading as="h2" textAlign="center" mt="2rem">
+        Search
       </Heading>
+
+      <SearchArea />
     </Flex>
   )
 }

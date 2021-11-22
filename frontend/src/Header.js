@@ -18,7 +18,7 @@ import { RegisterPage } from './RegisterPage'
 import { useUserState } from './hooks/useUserState'
 import { Link as RouteLink } from 'react-router-dom'
 import { SearchIcon } from '@chakra-ui/icons'
-import SearchBar from './SearchBar'
+import SearchArea from './SearchArea'
 import FriendRequestPopover from './FriendRequestPopover'
 
 export const Header = ({ headerRef }) => {
@@ -57,8 +57,6 @@ export const Header = ({ headerRef }) => {
 
       {isLoggedIn && (
         <>
-          <SearchBar />
-
           <Flex flexDirection="row">
             <Button as={RouteLink} to="/" mr="2rem">
               Home
@@ -68,8 +66,12 @@ export const Header = ({ headerRef }) => {
               Toolbox
             </Button>
 
-            <Button as={RouteLink} to="/friends">
+            <Button as={RouteLink} to="/friends" mr="2rem">
               Friends
+            </Button>
+
+            <Button as={RouteLink} to="/search">
+              Search
             </Button>
 
             <FriendRequestPopover ml="auto" />

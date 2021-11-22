@@ -47,3 +47,13 @@ export const GET_MY_FRIEND_REQUESTS = gql`
     }
   }
 `
+
+export const GET_USERS = gql`
+  query GetUsers($offset: Int, $limit: Int, $search: String) {
+    getUsers(offset: $offset, limit: $limit, search: $search) {
+      _id
+      firstName
+      lastName
+    }
+  }
+`
