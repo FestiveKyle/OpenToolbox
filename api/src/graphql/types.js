@@ -1,13 +1,10 @@
 export const typeDefs = /* GraphQL */ `
   type User {
     _id: String!
-    """
-    The user's name
-    """
+    "The user's name"
     firstName: String!
     lastName: String!
     email: String!
-    password: String!
     tools: [Tool]
     friends: [User]
     friendRequests: [FriendRequest]
@@ -76,6 +73,7 @@ export const typeDefs = /* GraphQL */ `
   type Query {
     tools: [Tool]
     currentUser: User
+    getFriendRequests: [FriendRequest]
     getFriends(offset: Int!, limit: Int!): [User]
   }
 
@@ -83,7 +81,7 @@ export const typeDefs = /* GraphQL */ `
     answerFriendRequest(answer: RequestAnswer!, friendRequestId: String): String
     addFriend(friendId: String!): String
     login(email: String!, password: String!): AuthPayload
-    logout: Boolean
+    logout: String
     signup(
       firstName: String!
       lastName: String!

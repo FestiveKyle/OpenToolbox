@@ -4,6 +4,28 @@ import bcrypt from 'bcrypt'
 export const resolvers = {
   Query: {
     currentUser: (parent, args, context) => context.getUser(),
+    getFriendRequests: async (parent, args, context) => {
+      const currentUser = context.getUser()
+
+      if (!currentUser) {
+        console.log(`Attempt to get users without user account`)
+        throw new Error(`Unable to find your account, please log in`)
+      }
+
+      let friendRequests
+      try {
+        friendRequests = await (
+          await context.db.query(aql`
+          FOR friendRequest IN friendRequests FILTER friendRequest._to == ${currentUser._id} RETURN friendRequest
+        `)
+        ).next()
+      } catch (error) {
+        console.log(
+          `Error while retrieving friend requests for user "${currentUser._id}": ${error}`,
+        )
+        throw new Error(`Error while retrieving friend requests`)
+      }
+    },
     getFriends: (parent, { offset, limit }, context) => {
       const currentUser = context.getUser()
 
@@ -30,6 +52,7 @@ export const resolvers = {
         throw new Error(`Unable to find your account, please log in`)
       }
 
+      // grab friend request
       let friendRequest
       try {
         friendRequest = await context.db
@@ -42,13 +65,19 @@ export const resolvers = {
         throw new Error(`Unable to answer this friend request`)
       }
 
+      // check if friend request is for current user
       if (friendRequest._to !== currentUser._id) {
         console.log(
-          `User "${currentUser._id}" attempted to accept friend request not to them: "${friendRequest}"`,
+          `User "${
+            currentUser._id
+          }" attempted to accept friend request not to them: "${JSON.stringify(
+            friendRequest,
+          )}"`,
         )
         throw new Error(`Unable to accept this friend request.`)
       }
 
+      // check if current friendship already exists
       let currentFriendship
       try {
         const friendArray = [friendRequest._from, friendRequest._to]
@@ -69,6 +98,7 @@ export const resolvers = {
         throw new Error(`Already friends with this user`)
       }
 
+      // create friendship if user accepted friend request
       if (answer === 'ACCEPT') {
         try {
           await context.db
@@ -82,12 +112,27 @@ export const resolvers = {
         }
       }
 
-      // remove friend request
-      await context.db.collection('friendRequests').remove(friendRequest._id)
+      // remove friend requests to each party from each party
+      const friendIdArray = [currentUser._id, friendRequest._from]
+      try {
+        await (
+          await context.db.query(aql`
+        FOR friendRequest IN friendRequests FILTER friendRequest._from IN ${friendIdArray} AND friendRequest._to IN ${friendIdArray} REMOVE friendRequest IN friendRequests
+      `)
+        ).next()
+      } catch (error) {
+        console.log(
+          `Error while user "${currentUser._id}" attempted to answer friend request "${friendRequestId}" during removal of old friend requests: ${error}`,
+        )
+      }
 
       // request successfully sent
       console.log(
-        `User "${currentUser._id}" successfully accepted friend request "${friendRequest}"`,
+        `User "${
+          currentUser._id
+        }" successfully accepted friend request "${JSON.stringify(
+          friendRequest,
+        )}"`,
       )
       return 'Friend request successfully accepted'
     },
@@ -129,7 +174,6 @@ export const resolvers = {
           FOR friend IN friends FILTER friend._from IN ${friendArray} AND friend._to IN ${friendArray} RETURN friend
         `)
         ).next()
-        console.log(currentFriendship)
       } catch (error) {
         console.log(
           `Error while checking if friendship exists during sending of friend request from "${currentUser._id}" to "${newFriend._id}": ${error}`,
@@ -142,16 +186,33 @@ export const resolvers = {
         throw new Error(`Already friends with this user`)
       }
 
+      // remove old friend requests if they exist
+      try {
+        console.log(
+          `User "${currentUser._id}" to add new friend "${friendId}", removing old friend requests`,
+        )
+        await (
+          await context.db.query(aql`
+          FOR friendRequest IN friendRequests FILTER friendRequest._from == ${currentUser._id} 
+            AND friendRequest._to == ${friendId} 
+            REMOVE friendRequest IN friendRequests
+        `)
+        ).next()
+      } catch (error) {
+        console.log(
+          `Error when user "${currentUser._id}" attempted to add new friend "${friendId}" during removal of all friend requests: ${error}`,
+        )
+        throw new Error(error)
+      }
+
+      // send friend request
       try {
         console.log(
           `User "${currentUser._id}" to add new friend "${friendId}", sending request`,
         )
         await context.db
           .collection('friendRequests')
-          .save(
-            { _from: currentUser._id, _to: friendId, seen: false },
-            { overwriteMode: 'replace' },
-          )
+          .save({ _from: currentUser._id, _to: friendId, seen: false })
       } catch (error) {
         console.log(
           `Error when user "${currentUser._id}" attempted to add new friend "${friendId}" during request creation: ${error}`,
@@ -227,6 +288,12 @@ export const resolvers = {
     },
     logout: (parent, args, context) => {
       const currentUser = context.getUser()
+
+      if (!currentUser) {
+        console.log(`Attempt logout without user account`)
+        throw new Error(`Unable to find your account, please log in`)
+      }
+
       context.logout()
       console.log(`User "${currentUser._id}" logged out`)
       return 'Successfully logged out'
