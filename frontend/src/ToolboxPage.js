@@ -15,6 +15,7 @@ import {
   Input,
   Spinner,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { useMutation, useQuery } from '@apollo/client'
 import { ADD_TOOL } from './graphql/mutations'
@@ -22,6 +23,8 @@ import { GET_MY_TOOLS } from './graphql/queries'
 import ToolCard from './ToolCard'
 
 const ToolboxPage = () => {
+  const toast = useToast()
+
   const {
     getMyToolLoading,
     getMyToolError,
@@ -45,7 +48,22 @@ const ToolboxPage = () => {
 
   const [addToolMutation, { data, loading, error }] = useMutation(ADD_TOOL, {
     onCompleted: (data) => {
-      console.log(data)
+      toast({
+        title: 'Added tool.',
+        description: `Successfully ${data?.addTool?.name} to your toolbox`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error.',
+        description: error,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
     },
   })
 

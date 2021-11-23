@@ -23,7 +23,7 @@ const UserCard = ({ firstName, lastName, userId, relationship, ...props }) => {
       onError: (error) => {
         toast({
           title: 'Error.',
-          description: `Error when sending friend request to ${data?.addFriend?.firstName} ${data?.addFriend?.lastName}: ${error}`,
+          description: error,
           status: 'success',
           duration: 9000,
           isClosable: true,

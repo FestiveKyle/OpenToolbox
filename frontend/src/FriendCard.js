@@ -25,7 +25,7 @@ const FriendCard = ({ firstName, lastName, friendId, ...props }) => {
       onError: (error) => {
         toast({
           title: 'Error.',
-          description: `Error when removing ${data?.addFriend?.firstName} ${data?.addFriend?.lastName} as friend: ${error}`,
+          description: error,
           status: 'success',
           duration: 9000,
           isClosable: true,
