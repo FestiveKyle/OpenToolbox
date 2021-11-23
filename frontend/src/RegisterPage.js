@@ -14,8 +14,16 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@apollo/client'
 import { SIGN_UP } from './graphql/mutations'
+import { useUserState } from './hooks/useUserState'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 
 export const RegisterPage = () => {
+  const { isLoggedIn, login } = useUserState()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const from = location.state?.from?.pathname || '/'
+
   const schema = yup.object({
     email: yup
       .string()
@@ -47,6 +55,7 @@ export const RegisterPage = () => {
         password: '',
         privacy: '',
       })
+      navigate(from, { replace: true })
     },
     onError: (error) => {
       console.error(error)
@@ -64,6 +73,8 @@ export const RegisterPage = () => {
       variables: { email, firstName, lastName, password, privacy },
     })
   }
+
+  if (isLoggedIn) return <Navigate to={from} replace={true} />
 
   return (
     <Flex mx="auto" my="4rem">

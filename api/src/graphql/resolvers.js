@@ -130,12 +130,21 @@ export const resolvers = {
 
         users = await (
           await context.db.query(aql`
+            WITH users
             FOR user IN v_users
             ${searchFilter}
+            LET isSelf = (user._id == ${currentUser._id}) 
+            LET isFriend = (!!LENGTH(
+              FOR vertex, edge IN 1..1 ANY ${currentUser._id} friends
+              FILTER vertex._id == user._id
+              RETURN vertex) )
+            LET relationship = isSelf == true ? "SELF" : isFriend == true ? "FRIEND" : "USER"
+            FILTER user._id != ${currentUser._id}  
             RETURN {
               "_id": user._id,
               "firstName": user.firstName,
-              "lastName": user.lastName 
+              "lastName": user.lastName,
+              "relationship": relationship 
             }`)
         ).all()
       } catch (error) {
@@ -163,18 +172,21 @@ export const resolvers = {
         console.log(`User "${currentUser._id}" attempting to retrieve tools`)
 
         const searchFilter = search
-          ? aql`SEARCH ANALYZER(tool.name IN TOKENS(${search}, "text_en"), "identity")`
+          ? aql`SEARCH ANALYZER(toolVertex.name IN TOKENS(${search}, "text_en"), "identity")`
           : undefined
 
         tools = await (
           await context.db.query(aql`
-            FOR tool IN v_tools
+            WITH users, tools
+            FOR friendVertex IN 1..1 ANY ${currentUser._id} friends
+              FOR toolVertex IN 1..1 OUTBOUND friendVertex toolClaims
+          
             ${searchFilter}
             RETURN {
-              "_id": tool._id,
-              "name": tool.name,
-              "brand": tool.brand,
-              "description": tool.description 
+              "_id": toolVertex._id,
+              "name": toolVertex.name,
+              "brand": toolVertex.brand,
+              "description": toolVertex.description 
             }`)
         ).all()
       } catch (error) {
@@ -420,7 +432,11 @@ export const resolvers = {
       )
 
       // request successfully sent
-      return 'Friend request successfully sent'
+      return {
+        _id: newFriend._id,
+        firstName: newFriend.firstName,
+        lastName: newFriend.lastName,
+      }
     },
     addTool: async (
       parent,

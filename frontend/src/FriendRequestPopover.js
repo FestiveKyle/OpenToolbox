@@ -19,7 +19,7 @@ import { ANSWER_FRIEND_REQUEST } from './graphql/mutations'
 
 const FriendRequestPopover = ({ ...props }) => {
   const { loading, error, data } = useQuery(GET_MY_FRIEND_REQUESTS, {
-    pollInterval: 5000,
+    pollInterval: 10000,
   })
 
   const [

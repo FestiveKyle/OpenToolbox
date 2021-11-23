@@ -73,6 +73,16 @@ export const ADD_TOOL = gql`
   }
 `
 
+export const ADD_FRIEND = gql`
+  mutation AddFriend($friendId: String!) {
+    addFriend(friendId: $friendId) {
+      _id
+      firstName
+      lastName
+    }
+  }
+`
+
 export const ANSWER_FRIEND_REQUEST = gql`
   mutation AnswerFriendRequest(
     $answer: RequestAnswer!

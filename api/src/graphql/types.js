@@ -9,6 +9,7 @@ export const typeDefs = /* GraphQL */ `
     friends: [User]
     friendRequests: [FriendRequest]
     privacy: String
+    relationship: Relationship
   }
 
   type Tool {
@@ -70,6 +71,12 @@ export const typeDefs = /* GraphQL */ `
     REJECT
   }
 
+  enum Relationship {
+    FRIEND
+    USER
+    SELF
+  }
+
   type Query {
     tools: [Tool]
     currentUser: User
@@ -85,7 +92,7 @@ export const typeDefs = /* GraphQL */ `
       answer: RequestAnswer!
       friendRequestId: String
     ): FriendRequest
-    addFriend(friendId: String!): String
+    addFriend(friendId: String!): User
     removeFriend(friendId: String!): User
     login(email: String!, password: String!): AuthPayload
     logout: String

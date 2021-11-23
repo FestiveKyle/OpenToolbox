@@ -50,6 +50,7 @@ export const GET_USERS = gql`
       _id
       firstName
       lastName
+      relationship
     }
   }
 `
