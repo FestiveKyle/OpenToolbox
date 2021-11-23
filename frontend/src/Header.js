@@ -5,6 +5,7 @@ import {
   Divider,
   Flex,
   Heading,
+  Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -20,6 +21,7 @@ import { Link as RouteLink } from 'react-router-dom'
 import { SearchIcon } from '@chakra-ui/icons'
 import SearchArea from './SearchArea'
 import FriendRequestPopover from './FriendRequestPopover'
+import logo from './images/logo-default-monochrome.svg'
 
 export const Header = ({ headerRef }) => {
   const { isLoggedIn, getUserLoading, user } = useUserState()
@@ -27,18 +29,17 @@ export const Header = ({ headerRef }) => {
   return (
     <Flex
       flexDirection="column"
-      bg="blue.300"
+      bg="#3E6866"
       py="1rem"
       px="2rem"
       ref={headerRef}
     >
-      <Flex flexDirection="row" w="100%">
-        <Heading mr="auto">Toolbox Sharing</Heading>
-      </Flex>
-      <Flex mb="2rem">
+      <Flex flexDirection="row" w="100%" mb="2rem">
+        <Image src={logo} alt="OpenToolboxzz" h="3rem" />
+
         {isLoggedIn ? (
           <>
-            <Text ml="auto" mr="2rem" alignSelf="center">
+            <Text ml="auto" mr="2rem" alignSelf="center" color="white">
               <b>Welcome</b>, {user.firstName} {user.lastName}
             </Text>
             <LogoutButton />
