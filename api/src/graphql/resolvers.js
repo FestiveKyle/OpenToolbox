@@ -172,7 +172,7 @@ export const resolvers = {
         console.log(`User "${currentUser._id}" attempting to retrieve tools`)
 
         const searchFilter = search
-          ? aql`SEARCH ANALYZER(toolVertex.name IN TOKENS(${search}, "text_en"), "identity")`
+          ? aql`SEARCH ANALYZER(tool.name IN TOKENS(${search}, "text_en"), "text_en")`
           : undefined
 
         tools = await (
@@ -180,19 +180,21 @@ export const resolvers = {
             WITH users, tools
             FOR friendVertex IN 1..1 ANY ${currentUser._id} friends
               FOR toolVertex IN 1..1 OUTBOUND friendVertex toolClaims
+                FOR tool IN v_tools
+                  ${searchFilter}
+                  FILTER tool._id == toolVertex._id 
           
-            ${searchFilter}
-            RETURN {
-              "_id": toolVertex._id,
-              "name": toolVertex.name,
-              "brand": toolVertex.brand,
-              "description": toolVertex.description,
-              "owner": {
-                "_id": friendVertex._id,
-                "firstName": friendVertex.firstName,
-                "lastName": friendVertex.lastName
-              }
-            }`)
+                  RETURN {
+                    "_id": toolVertex._id,
+                    "name": toolVertex.name,
+                    "brand": toolVertex.brand,
+                    "description": toolVertex.description,
+                    "owner": {
+                      "_id": friendVertex._id,
+                      "firstName": friendVertex.firstName,
+                      "lastName": friendVertex.lastName
+                    }
+                  }`)
         ).all()
       } catch (error) {
         console.log(
