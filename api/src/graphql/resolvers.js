@@ -186,7 +186,12 @@ export const resolvers = {
               "_id": toolVertex._id,
               "name": toolVertex.name,
               "brand": toolVertex.brand,
-              "description": toolVertex.description 
+              "description": toolVertex.description,
+              "owner": {
+                "_id": friendVertex._id,
+                "firstName": friendVertex.firstName,
+                "lastName": friendVertex.lastName
+              }
             }`)
         ).all()
       } catch (error) {
@@ -445,14 +450,19 @@ export const resolvers = {
     ) => {
       const currentUser = context.getUser()
 
+      if (!currentUser) {
+        console.log(`Attempt to add tool without user account`)
+        throw new Error(`Unable to find your account, please log in`)
+      }
+
       const toolInfo = {
         name: name.trim(),
-        color: color.trim(),
         brand: brand.trim(),
         photos,
         description: description.trim(),
         privacy,
       }
+
       let newTool
       try {
         console.log(`User "${currentUser._id}" attempting to insert new tool`)
@@ -495,6 +505,74 @@ export const resolvers = {
       )
 
       return newTool
+    },
+    removeTool: async (parent, { toolId }, context) => {
+      const currentUser = context.getUser()
+
+      if (!currentUser) {
+        console.log(`Attempt to remove friend without user account`)
+        throw new Error(`Unable to find your account, please log in`)
+      }
+
+      // get old tool edge and vertex
+      let oldToolConnection
+      try {
+        console.log(`User "${currentUser._id}" attempting to remove tool`)
+        oldToolConnection = await (
+          await context.db.query(aql`
+            WITH users, tools
+            FOR vertex, edge IN 1..1 OUTBOUND ${currentUser} toolClaims
+            FILTER edge._to == ${toolId}
+            RETURN {vertex, edge} `)
+        ).next()
+      } catch (error) {
+        console.log(
+          `Error when user "${
+            currentUser._id
+          }" attempted to remove tool with info "${JSON.stringify(
+            toolId,
+          )} - During connection retrieval": ${error}`,
+        )
+        throw new Error(error)
+      }
+
+      // check if current user owns tool
+      if (oldToolConnection?.edge?._from !== currentUser._id) {
+        console.log(
+          `User ${currentUser._id} attempted to remove tool ${toolId} without owning it`,
+        )
+        throw new Error(
+          `Error when removing this tool. You do not own this tool.`,
+        )
+      }
+
+      // remove tool
+      try {
+        await context.db.collection('tools').remove(toolId)
+      } catch (error) {
+        console.log(
+          `Error when user "${currentUser._id}" attempted to remove tool "${toolId}": ${error}`,
+        )
+        throw new Error(error)
+      }
+
+      // remove claim
+      try {
+        await context.db
+          .collection('toolClaims')
+          .remove(oldToolConnection.edge._id)
+      } catch (error) {
+        console.log(
+          `Error when user "${currentUser._id}" attempted to remove toolClaim "${oldToolConnection.edge._id}": ${error}`,
+        )
+        throw new Error(error)
+      }
+
+      console.log(
+        `User "${currentUser._id}" successfully removed tool "${toolId}" `,
+      )
+
+      return oldToolConnection.vertex
     },
     login: async (parent, { email, password }, context) => {
       const { user } = await context.authenticate('graphql-local', {

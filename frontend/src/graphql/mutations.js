@@ -73,6 +73,15 @@ export const ADD_TOOL = gql`
   }
 `
 
+export const REMOVE_TOOL = gql`
+  mutation RemoveTool($toolId: String!) {
+    removeTool(toolId: $toolId) {
+      _id
+      name
+    }
+  }
+`
+
 export const ADD_FRIEND = gql`
   mutation AddFriend($friendId: String!) {
     addFriend(friendId: $friendId) {

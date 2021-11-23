@@ -21,6 +21,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { ADD_TOOL } from './graphql/mutations'
 import { GET_MY_TOOLS } from './graphql/queries'
 import ToolCard from './ToolCard'
+import OwnedToolCard from './OwnedToolCard'
 
 const ToolboxPage = () => {
   const toast = useToast()
@@ -47,10 +48,11 @@ const ToolboxPage = () => {
   } = useForm({ resolver: yupResolver(schema) })
 
   const [addToolMutation, { data, loading, error }] = useMutation(ADD_TOOL, {
+    refetchQueries: [GET_MY_TOOLS],
     onCompleted: (data) => {
       toast({
         title: 'Added tool.',
-        description: `Successfully ${data?.addTool?.name} to your toolbox`,
+        description: `Successfully added ${data?.addTool?.name} to your toolbox`,
         status: 'success',
         duration: 9000,
         isClosable: true,
@@ -118,7 +120,7 @@ const ToolboxPage = () => {
 
       <Divider orientation="horizontal" my="2rem" />
 
-      <Heading as="h2" textAlign="center">
+      <Heading as="h2" textAlign="center" mb="2rem">
         Your Tools
       </Heading>
       {getMyToolLoading ? (
@@ -126,22 +128,31 @@ const ToolboxPage = () => {
           <Text>Loading tools</Text>
           <Spinner size="lg" />
         </>
-      ) : !getMyToolsData ? (
-        <Text>No tools</Text>
+      ) : !getMyToolsData?.getMyTools.length ? (
+        <Text fontSize="1.5rem" textAlign="center">
+          No tools
+        </Text>
       ) : (
-        <Grid gridTemplateColumns="repeat(3, 1fr)">
+        <Grid gridTemplateColumns="repeat(3, 1fr)" gap="1rem">
           {getMyToolsData.getMyTools.map((toolData, idx) => {
             return (
-              <ToolCard
+              <OwnedToolCard
                 key={`toolCard-${idx}`}
                 name={toolData.name}
                 brand={toolData.brand}
                 description={toolData.description}
+                toolId={toolData._id}
               />
             )
           })}
         </Grid>
       )}
+
+      <Divider orientation="horizontal" my="2rem" />
+
+      <Heading as="h2" textAlign="center" mb="2rem">
+        Borrowed Tools
+      </Heading>
     </Flex>
   )
 }

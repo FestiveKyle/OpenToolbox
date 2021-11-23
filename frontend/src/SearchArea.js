@@ -81,6 +81,7 @@ const SearchArea = () => {
               name={tool.name}
               description={tool.description}
               brand={tool.brand}
+              owner={tool.owner}
             />
           )
         })}

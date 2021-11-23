@@ -62,6 +62,11 @@ export const GET_TOOLS = gql`
       name
       brand
       description
+      owner {
+        _id
+        firstName
+        lastName
+      }
     }
   }
 `

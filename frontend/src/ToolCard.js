@@ -21,7 +21,7 @@ const ToolCard = ({ name, brand, description, owner, ...props }) => {
       </Text>
       {owner && (
         <Text>
-          <b>Owner:</b> {owner}
+          <b>Owner:</b> {owner?.firstName} {owner?.lastName}
         </Text>
       )}
     </Flex>

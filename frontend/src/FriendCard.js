@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, IconButton, Text, useToast } from '@chakra-ui/react'
-import { CloseIcon } from '@chakra-ui/icons'
+import { CloseIcon, DeleteIcon } from '@chakra-ui/icons'
 import { REMOVE_FRIEND } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 
@@ -51,7 +51,7 @@ const FriendCard = ({ firstName, lastName, friendId, ...props }) => {
           ml="auto"
           bg="white"
           color="red"
-          icon={<CloseIcon />}
+          icon={<DeleteIcon />}
           _hover={{ bg: 'black' }}
           onClick={async () => {
             await removeFriendMutation({

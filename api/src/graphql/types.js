@@ -111,5 +111,6 @@ export const typeDefs = /* GraphQL */ `
       description: String
       privacy: Privacy
     ): Tool
+    removeTool(toolId: String!): Tool
   }
 `
