@@ -1,25 +1,8 @@
-import { useQuery } from '@apollo/client'
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Heading,
-  Image,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Text,
-} from '@chakra-ui/react'
-import React, { createRef, useEffect } from 'react'
-import { GET_CURRENT_USER } from './graphql/queries'
-import { LoginPage } from './LoginPage'
+import { Button, Flex, Image, Text } from '@chakra-ui/react'
+import React from 'react'
 import { LogoutButton } from './LogoutButton'
-import { RegisterPage } from './RegisterPage'
 import { useUserState } from './hooks/useUserState'
 import { Link as RouteLink } from 'react-router-dom'
-import { SearchIcon } from '@chakra-ui/icons'
-import SearchArea from './SearchArea'
 import FriendRequestPopover from './FriendRequestPopover'
 import logo from './images/logo-default-monochrome.svg'
 

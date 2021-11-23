@@ -4,13 +4,7 @@ import { App } from './App'
 import { BrowserRouter } from 'react-router-dom'
 import { ChakraProvider } from '@chakra-ui/react'
 import { theme } from './theme'
-import {
-  ApolloClient,
-  ApolloProvider,
-  createHttpLink,
-  HttpLink,
-  InMemoryCache,
-} from '@apollo/client'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { UserStateProvider } from './hooks/useUserState'
 
 const apolloClient = new ApolloClient({

@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { GET_MY_FRIEND_REQUESTS } from './graphql/queries'
 import { useMutation, useQuery } from '@apollo/client'
-import { CheckIcon, CloseIcon, DeleteIcon, StarIcon } from '@chakra-ui/icons'
+import { CheckIcon, DeleteIcon, StarIcon } from '@chakra-ui/icons'
 import { ANSWER_FRIEND_REQUEST } from './graphql/mutations'
 
 const FriendRequestPopover = ({ ...props }) => {

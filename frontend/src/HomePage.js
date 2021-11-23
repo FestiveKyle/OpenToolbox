@@ -1,6 +1,5 @@
 import React from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
-import SearchArea from './SearchArea'
 
 export const HomePage = () => {
   return (

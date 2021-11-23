@@ -1,13 +1,7 @@
 import React, { useRef } from 'react'
-import { Button, Flex, Heading, Spinner, Text } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { Header } from './Header'
-import {
-  BrowserRouter,
-  Link as RouterLink,
-  Route,
-  Routes,
-} from 'react-router-dom'
-import { Link } from '@chakra-ui/react'
+import { Route, Routes } from 'react-router-dom'
 import ToolboxPage from './ToolboxPage'
 import { LoginPage } from './LoginPage'
 import { RegisterPage } from './RegisterPage'

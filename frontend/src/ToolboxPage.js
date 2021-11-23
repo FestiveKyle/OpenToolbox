@@ -2,7 +2,6 @@ import React from 'react'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useUserState } from './hooks/useUserState'
 import {
   Button,
   Divider,
@@ -20,7 +19,6 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import { ADD_TOOL } from './graphql/mutations'
 import { GET_MY_TOOLS } from './graphql/queries'
-import ToolCard from './ToolCard'
 import OwnedToolCard from './OwnedToolCard'
 
 const ToolboxPage = () => {

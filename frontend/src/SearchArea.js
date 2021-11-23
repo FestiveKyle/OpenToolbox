@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Divider,
   Flex,
@@ -11,7 +11,6 @@ import {
 import { SearchIcon } from '@chakra-ui/icons'
 import { useQuery } from '@apollo/client'
 import { GET_TOOLS, GET_USERS } from './graphql/queries'
-import FriendCard from './FriendCard'
 import UserCard from './UserCard'
 import ToolCard from './ToolCard'
 

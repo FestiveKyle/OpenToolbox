@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react'
 import {
   Button,
-  Center,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -12,9 +11,6 @@ import {
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation } from '@apollo/client'
-import { LOG_IN, SIGN_UP } from './graphql/mutations'
-import { GET_CURRENT_USER } from './graphql/queries'
 import { useUserState } from './hooks/useUserState'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, IconButton, Text, useToast } from '@chakra-ui/react'
-import { CloseIcon, DeleteIcon } from '@chakra-ui/icons'
+import { DeleteIcon } from '@chakra-ui/icons'
 import { REMOVE_FRIEND } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 

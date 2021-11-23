@@ -1,9 +1,8 @@
 import React from 'react'
 import { Flex, IconButton, Text, useToast } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
-import { ADD_TOOL, REMOVE_TOOL } from './graphql/mutations'
-import { GET_MY_TOOLS } from './graphql/queries'
-import { CloseIcon, DeleteIcon } from '@chakra-ui/icons'
+import { REMOVE_TOOL } from './graphql/mutations'
+import { DeleteIcon } from '@chakra-ui/icons'
 
 const OwnedToolCard = ({ name, brand, description, toolId, ...props }) => {
   const toast = useToast()
