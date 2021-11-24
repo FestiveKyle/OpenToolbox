@@ -16,6 +16,7 @@ jobs:
       uses: actions/setup-node@v1
 
     - name: Build
+      working-directory: api
       run: |
         npm install
         npm run build
