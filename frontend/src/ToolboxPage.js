@@ -20,8 +20,10 @@ import { useMutation, useQuery } from '@apollo/client'
 import { ADD_TOOL } from './graphql/mutations'
 import { GET_MY_TOOLS } from './graphql/queries'
 import OwnedToolCard from './OwnedToolCard'
+import { useTitle } from 'react-use'
 
 const ToolboxPage = () => {
+  useTitle('OpenToolbox - My Toolbox')
   const toast = useToast()
 
   const {

@@ -13,8 +13,10 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useUserState } from './hooks/useUserState'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useTitle } from 'react-use'
 
 export const LoginPage = ({ headerRef }) => {
+  useTitle('OpenToolbox - Login')
   const { isLoggedIn, login } = useUserState()
   const location = useLocation()
   const navigate = useNavigate()

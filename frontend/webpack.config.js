@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 
 module.exports = () => {
@@ -50,6 +51,7 @@ module.exports = () => {
       new HtmlWebPackPlugin({
         template: './src/index.html',
       }),
+      new FaviconsWebpackPlugin('src/images/favicon.ico'),
       new Dotenv(),
     ],
   }
