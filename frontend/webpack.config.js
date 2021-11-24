@@ -52,7 +52,7 @@ module.exports = () => {
         template: './src/index.html',
       }),
       new FaviconsWebpackPlugin('src/images/favicon.ico'),
-      new Dotenv(),
+      process.env.NODE_ENV === 'development' && new Dotenv(),
     ],
   }
 }
