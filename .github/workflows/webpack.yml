@@ -19,7 +19,7 @@ jobs:
       working-directory: frontend
       run: |
         npm install
-        npm run build
+        npm run build -- --env REACT_APP_API_ENDPOINT=http://192.168.0.120:4000
         
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
