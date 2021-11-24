@@ -16,7 +16,7 @@ jobs:
       uses: actions/setup-node@v1
 
     - name: Build
-      working-directory: api
+      working-directory: frontend
       run: |
         npm install
         npm run build
