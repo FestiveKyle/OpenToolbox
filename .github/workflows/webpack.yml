@@ -27,7 +27,7 @@ jobs:
     - name: Create .env
       run: |
         cat << EOF > .env
-        REACT_APP_API_ENDPOINT="${{ REACT_APP_API_ENDPOINT }}"
+        REACT_APP_API_ENDPOINT="${{ secrets.REACT_APP_API_ENDPOINT }}"
         EOF
 
 
