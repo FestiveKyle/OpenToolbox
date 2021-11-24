@@ -10,28 +10,16 @@ export const useUserState = () => useContext(UserContext)
 
 export const UserStateProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState(null)
   const client = useApolloClient()
 
   const [login, { data: loginData, loading: loginLoading, error: loginError }] =
     useMutation(LOG_IN, {
       onCompleted: (data) => {
-        console.log(data)
+        setUser(data?.login?.user)
       },
       onError: (error) => {
         console.error(error)
-      },
-      update: (
-        cache,
-        {
-          data: {
-            login: { user },
-          },
-        },
-      ) => {
-        cache.writeQuery({
-          query: GET_CURRENT_USER,
-          data: { currentUser: user },
-        })
       },
     })
 
@@ -39,24 +27,29 @@ export const UserStateProvider = ({ children }) => {
     loading: getUserLoading,
     error: getUserError,
     data: getUserData,
-  } = useQuery(GET_CURRENT_USER)
+  } = useQuery(GET_CURRENT_USER, {
+    onCompleted: (data) => {
+      setUser(data?.currentUser)
+    },
+  })
 
   const [
     logout,
     { data: logoutData, loading: logoutLoading, error: logoutError },
   ] = useMutation(LOG_OUT, {
     onCompleted: async () => {
-      await client.resetStore()
+      setUser(null)
+      await client.clearStore()
     },
   })
 
   useEffect(() => {
-    setIsLoggedIn(!!getUserData?.currentUser?._id)
-  }, [getUserData])
+    setIsLoggedIn(!!user?._id)
+  }, [user?._id])
 
   const userState = {
     isLoggedIn,
-    user: getUserData?.currentUser,
+    user,
     getUserLoading,
     getUserError,
     login,

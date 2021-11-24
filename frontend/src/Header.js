@@ -1,5 +1,5 @@
 import { Button, Flex, Image, Text } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { LogoutButton } from './LogoutButton'
 import { useUserState } from './hooks/useUserState'
 import { Link as RouteLink } from 'react-router-dom'
@@ -18,9 +18,9 @@ export const Header = ({ headerRef }) => {
       ref={headerRef}
     >
       <Flex flexDirection="row" w="100%" mb="2rem">
-        <Image src={logo} alt="OpenToolboxzz" h="3rem" />
+        <Image src={logo} alt="OpenToolbox" h="3rem" />
 
-        {isLoggedIn ? (
+        {isLoggedIn && user ? (
           <>
             <Text ml="auto" mr="2rem" alignSelf="center" color="white">
               <b>Welcome</b>, {user.firstName} {user.lastName}

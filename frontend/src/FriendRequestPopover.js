@@ -16,10 +16,13 @@ import { GET_MY_FRIEND_REQUESTS } from './graphql/queries'
 import { useMutation, useQuery } from '@apollo/client'
 import { CheckIcon, DeleteIcon, StarIcon } from '@chakra-ui/icons'
 import { ANSWER_FRIEND_REQUEST } from './graphql/mutations'
+import { useUserState } from './hooks/useUserState'
 
 const FriendRequestPopover = ({ ...props }) => {
+  const { isLoggedIn, user } = useUserState()
   const { loading, error, data } = useQuery(GET_MY_FRIEND_REQUESTS, {
     pollInterval: 10000,
+    skip: !isLoggedIn || !user,
   })
 
   const [
@@ -35,8 +38,6 @@ const FriendRequestPopover = ({ ...props }) => {
       cache.gc()
     },
   })
-
-  console.log(data)
 
   return (
     <Popover>
