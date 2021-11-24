@@ -32,11 +32,12 @@ const {
   FRONTEND_URL,
   FRONTEND_PORT,
   SESSION_SECRETS,
+  REDIS_URL,
   REDIS_PASSWORD,
 } = process.env
 
 let RedisStore = require('connect-redis')(session)
-let redisClient = redis.createClient({ password: REDIS_PASSWORD })
+let redisClient = redis.createClient(REDIS_URL, { password: REDIS_PASSWORD })
 
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 

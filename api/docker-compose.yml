@@ -1,0 +1,36 @@
+version: '3.3'
+services:
+  arangodb:
+    ports:
+      - '8529:8529'
+    image: 'arangodb/arangodb:3.8.2'
+    volumes:
+      - ${DB_MOUNT_LOCATION}/arangodb3:/var/lib/arangodb3
+      - ${DB_MOUNT_LOCATION}/arangodb3-apps:/var/lib/arangodb3-apps
+    environment:
+      - ARANGO_ROOT_PASSWORD=${ARANGO_ROOT_PASSWORD}
+
+  redis:
+    image: bitnami/redis
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+
+  api:
+    image: festivekyle/opentoolbox-api
+    ports:
+      - '4000:4000'
+    environment:
+      - ARANGO_ROOT_PASSWORD=${ARANGO_ROOT_PASSWORD}
+      - ARANGO_URL=${ARANGO_URL}
+      - ARANGO_DATABASE_NAME=${ARANGO_DATABASE_NAME}
+      - API_URL=${API_URL}
+      - API_PORT=${API_PORT}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - SESSION_SECRETS=${SESSION_SECRETS}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    depends_on:
+      - redis
+      - arangodb
+    restart: always
