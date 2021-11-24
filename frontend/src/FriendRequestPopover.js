@@ -13,7 +13,11 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { GET_MY_FRIEND_REQUESTS } from './graphql/queries'
+import {
+  GET_MY_FRIEND_REQUESTS,
+  GET_MY_FRIENDS,
+  GET_USERS,
+} from './graphql/queries'
 import { useMutation, useQuery } from '@apollo/client'
 import { CheckIcon, DeleteIcon, StarIcon } from '@chakra-ui/icons'
 import { ANSWER_FRIEND_REQUEST } from './graphql/mutations'
@@ -38,6 +42,7 @@ const FriendRequestPopover = ({ ...props }) => {
       cache.evict({ id: `FriendRequest:${data?.answerFriendRequest?._id}` })
       cache.gc()
     },
+    refetchQueries: [GET_MY_FRIENDS, GET_USERS],
   })
 
   return (

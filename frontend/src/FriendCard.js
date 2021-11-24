@@ -9,8 +9,8 @@ const FriendCard = ({ firstName, lastName, friendId, ...props }) => {
   const [removeFriendMutation, { data, loading, error }] = useMutation(
     REMOVE_FRIEND,
     {
-      update: (cache, result) => {
-        cache.evict({ id: `User:${result?.answerFriendRequest?._id}` })
+      update: (cache, { data }) => {
+        cache.evict({ id: `User:${data?.removeFriend?._id}` })
         cache.gc()
       },
       onCompleted: (data) => {

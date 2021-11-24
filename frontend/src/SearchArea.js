@@ -23,6 +23,7 @@ const SearchArea = () => {
     data: getUserData,
   } = useQuery(GET_USERS, {
     variables: { search: search },
+    fetchPolicy: 'cache-and-network',
   })
 
   const {
@@ -31,6 +32,7 @@ const SearchArea = () => {
     data: getToolsData,
   } = useQuery(GET_TOOLS, {
     variables: { search: search },
+    fetchPolicy: 'cache-and-network',
   })
 
   return (

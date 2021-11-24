@@ -7,12 +7,14 @@ import { useTitle } from 'react-use'
 
 const FriendsPage = () => {
   useTitle('Friends - OpenToolbox')
-  const { loading, error, data } = useQuery(GET_MY_FRIENDS)
+  const { loading, error, data } = useQuery(GET_MY_FRIENDS, {
+    fetchPolicy: 'cache-and-network',
+  })
 
   return (
     <Flex mx="auto" my="2rem" flexDirection="column" w="100%">
       <Heading textAlign="center">Friends</Heading>
-      {loading ? (
+      {loading && !data ? (
         <>
           <Text>Loading tools</Text>
           <Spinner size="lg" />
