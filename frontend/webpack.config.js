@@ -51,8 +51,8 @@ module.exports = () => {
       new HtmlWebPackPlugin({
         template: './src/index.html',
       }),
-      new FaviconsWebpackPlugin('src/images/favicon.ico'),
-      process.env.NODE_ENV === 'development' && new Dotenv(),
+      new FaviconsWebpackPlugin('src/images/apple-touch-icon.png'),
+      new Dotenv(),
     ],
   }
 }
