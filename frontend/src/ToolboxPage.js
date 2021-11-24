@@ -73,8 +73,6 @@ const ToolboxPage = () => {
     await addToolMutation({ variables: { name, brand, color, description } })
   }
 
-  console.log(getMyToolsData)
-
   return (
     <Flex mx="auto" my="2rem" flexDirection="column" w="100%">
       <Flex flexDirection="column" mx="auto">
