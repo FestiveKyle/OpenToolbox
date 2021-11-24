@@ -2,7 +2,7 @@ name: NodeJS with Webpack
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
 
 jobs:
@@ -16,6 +16,7 @@ jobs:
       uses: actions/setup-node@v1
 
     - name: Build
+      working-directory: frontend
       run: |
         npm install
         npm run build
