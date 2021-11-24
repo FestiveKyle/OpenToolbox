@@ -16,8 +16,10 @@ import { useMutation } from '@apollo/client'
 import { SIGN_UP } from './graphql/mutations'
 import { useUserState } from './hooks/useUserState'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useTitle } from 'react-use'
 
 export const RegisterPage = () => {
+  useTitle('Register - OpenToolbox')
   const { isLoggedIn, login } = useUserState()
   const location = useLocation()
   const navigate = useNavigate()

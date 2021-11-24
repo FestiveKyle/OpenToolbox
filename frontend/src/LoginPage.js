@@ -16,7 +16,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useTitle } from 'react-use'
 
 export const LoginPage = ({ headerRef }) => {
-  useTitle('OpenToolbox - Login')
+  useTitle('Login - OpenToolbox')
   const { isLoggedIn, login } = useUserState()
   const location = useLocation()
   const navigate = useNavigate()

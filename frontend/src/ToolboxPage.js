@@ -23,7 +23,7 @@ import OwnedToolCard from './OwnedToolCard'
 import { useTitle } from 'react-use'
 
 const ToolboxPage = () => {
-  useTitle('OpenToolbox - My Toolbox')
+  useTitle('My Toolbox - OpenToolbox')
   const toast = useToast()
 
   const {

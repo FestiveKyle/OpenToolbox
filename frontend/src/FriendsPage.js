@@ -6,7 +6,7 @@ import FriendCard from './FriendCard'
 import { useTitle } from 'react-use'
 
 const FriendsPage = () => {
-  useTitle('OpenToolbox - Friends')
+  useTitle('Friends - OpenToolbox')
   const { loading, error, data } = useQuery(GET_MY_FRIENDS)
 
   return (
