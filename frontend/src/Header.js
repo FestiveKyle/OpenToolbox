@@ -42,23 +42,33 @@ export const Header = ({ headerRef }) => {
       {isLoggedIn && (
         <>
           <Flex flexDirection="row">
-            <Button as={RouteLink} to="/" mr="2rem">
+            <Button as={RouteLink} to="/" mr="2rem" _hover={{ bg: 'orange' }}>
               Home
             </Button>
 
-            <Button as={RouteLink} to="/toolbox" mr="2rem">
+            <Button
+              as={RouteLink}
+              to="/toolbox"
+              mr="2rem"
+              _hover={{ bg: 'orange' }}
+            >
               Toolbox
             </Button>
 
-            <Button as={RouteLink} to="/friends" mr="2rem">
+            <Button
+              as={RouteLink}
+              to="/friends"
+              mr="2rem"
+              _hover={{ bg: 'orange' }}
+            >
               Friends
             </Button>
 
-            <Button as={RouteLink} to="/search">
+            <Button as={RouteLink} to="/search" _hover={{ bg: 'orange' }}>
               Search
             </Button>
 
-            <FriendRequestPopover ml="auto" />
+            <FriendRequestPopover ml="auto" _hover={{ bg: 'orange' }} />
           </Flex>
         </>
       )}

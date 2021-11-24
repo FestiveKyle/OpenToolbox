@@ -22,7 +22,7 @@ const FriendsPage = () => {
       ) : !data ? (
         <Text>No friends...yet!</Text>
       ) : (
-        <Grid gridTemplateColumns="repeat(3, 1fr)">
+        <Grid gridTemplateColumns="repeat(3, 1fr)" gap="1rem">
           {data.getMyFriends.map((friend, idx) => {
             return (
               <FriendCard
