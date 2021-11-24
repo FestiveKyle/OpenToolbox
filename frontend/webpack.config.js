@@ -30,10 +30,10 @@ module.exports = () => {
             loader: 'babel-loader',
           },
         },
-        // {
-        //   test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        //   type: 'asset/resource',
-        // },
+        {
+          test: /\.(png|svg|jpg|jpeg|gif)$/i,
+          type: 'asset/resource',
+        },
         {
           test: /\.css$/i,
           use: [
@@ -51,7 +51,7 @@ module.exports = () => {
       new HtmlWebPackPlugin({
         template: './src/index.html',
       }),
-      new FaviconsWebpackPlugin('./src/images/apple-touch-icon.png'),
+      new FaviconsWebpackPlugin('src/images/apple-touch-icon.png'),
       new Dotenv({ silent: true }),
     ],
   }
