@@ -11,6 +11,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { GET_MY_FRIEND_REQUESTS } from './graphql/queries'
 import { useMutation, useQuery } from '@apollo/client'
@@ -33,8 +34,8 @@ const FriendRequestPopover = ({ ...props }) => {
       answerFriendRequestError,
     },
   ] = useMutation(ANSWER_FRIEND_REQUEST, {
-    update: (cache, result) => {
-      cache.evict({ id: `FriendResult:${result?.answerFriendRequest?._id}` })
+    update: (cache, { data }) => {
+      cache.evict({ id: `FriendRequest:${data?.answerFriendRequest?._id}` })
       cache.gc()
     },
   })

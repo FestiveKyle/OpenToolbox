@@ -59,7 +59,7 @@ const UserCard = ({ firstName, lastName, userId, relationship, ...props }) => {
       userIconButton = (
         <CheckCircleIcon
           display="block"
-          boxSize="2rem"
+          boxSize="1.5rem"
           color="green"
           ml="auto"
           my="auto"
