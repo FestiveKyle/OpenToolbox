@@ -47,8 +47,9 @@ services:
     ports:
       - '3000:3000'
     environment:
+      - SKIP_DOTENV=true
       - API_ENDPOINT=${API_ENDPOINT}
-      - FRONTENDPORT=${FRONTEND_PORT}
+      - FRONTEND_PORT=${FRONTEND_PORT}
     labels:
       - com.centurylinklabs.watchtower.enable=true
     volumes:
