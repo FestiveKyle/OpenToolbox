@@ -11,6 +11,6 @@ COPY ./src ./src
 ENV NODE_ENV production
 
 USER node
-EXPOSE 4000
+EXPOSE 3000
 
 CMD ["npm", "build-start"]
