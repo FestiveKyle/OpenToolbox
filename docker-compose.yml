@@ -48,7 +48,7 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
     volumes:
-      - ./frontend.env:/app/.env
+      - /frontend.env:/app/.env
     depends_on:
       - api
     restart: always
