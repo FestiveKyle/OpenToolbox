@@ -1,0 +1,61 @@
+version: '3.3'
+services:
+  arangodb:
+    ports:
+      - '8529:8529'
+    image: 'arangodb/arangodb:3.8.2'
+    volumes:
+      - ${DB_MOUNT_LOCATION}/arangodb3:/var/lib/arangodb3
+      - ${DB_MOUNT_LOCATION}/arangodb3-apps:/var/lib/arangodb3-apps
+    environment:
+      - ARANGO_ROOT_PASSWORD=${ARANGO_ROOT_PASSWORD}
+
+  redis:
+    image: bitnami/redis
+    ports:
+      - '6379:6379'
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+
+  api:
+    image: festivekyle/opentoolbox-api
+    ports:
+      - '4000:4000'
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    environment:
+      - ARANGO_ROOT_PASSWORD=${ARANGO_ROOT_PASSWORD}
+      - ARANGO_URL=${ARANGO_URL}
+      - ARANGO_DATABASE_NAME=${ARANGO_DATABASE_NAME}
+      - API_URL=${API_URL}
+      - API_PORT=${API_PORT}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - DB_MOUNT_LOCATION=${DB_MOUNT_LOCATION}
+      - SESSION_SECRETS=${SESSION_SECRETS}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - DOCKER_COMPOSE_DIRECTORY=${DOCKER_COMPOSE_DIRECTORY}
+    depends_on:
+      - redis
+      - arangodb
+    restart: always
+
+  frontend:
+    image: festivekyle/opentoolbox-frontend
+    ports:
+      - '3000:3000'
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    volumes:
+      - ./frontend.env:/app/.env
+    depends_on:
+      - api
+    restart: always
+
+  watchtower:
+    image: containrrr/watchtower
+    environment:
+      - WATCHTOWER_LABEL_ENABLE=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

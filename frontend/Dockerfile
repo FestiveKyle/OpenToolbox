@@ -13,4 +13,4 @@ ENV NODE_ENV production
 USER node
 EXPOSE 3000
 
-CMD ["npm", "build-start"]
+CMD ["npm", "run", "build-start"]
