@@ -18,7 +18,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   api:
-    image: festivekyle/opentoolbox-api
+    image: festivekyle/opentoolbox-api:latest
     ports:
       - '4000:4000'
     labels:
@@ -42,7 +42,7 @@ services:
     restart: always
 
   frontend:
-    image: festivekyle/opentoolbox-frontend
+    image: festivekyle/opentoolbox-frontend:latest
     ports:
       - '3000:3000'
     labels:
