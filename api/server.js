@@ -22,7 +22,7 @@ import {
 
 const cors = require('cors')
 
-require('dotenv').config()
+if (!process.env?.SKIP_DOTENV) require('dotenv').config()
 const {
   ARANGO_ROOT_PASSWORD,
   ARANGO_URL,
