@@ -48,7 +48,7 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
     volumes:
-      - /frontend.env:/app/.env
+      - ./frontend/config:/app/config
     depends_on:
       - api
     restart: always
@@ -59,3 +59,4 @@ services:
       - WATCHTOWER_LABEL_ENABLE=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 60

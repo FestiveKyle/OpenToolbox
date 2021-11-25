@@ -52,7 +52,7 @@ module.exports = () => {
         template: './src/index.html',
       }),
       new FaviconsWebpackPlugin('src/images/apple-touch-icon.png'),
-      new Dotenv(),
+      new Dotenv({ path: './config/.env' }),
     ],
   }
 }
