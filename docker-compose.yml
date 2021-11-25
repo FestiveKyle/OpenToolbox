@@ -18,7 +18,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   api:
-    image: festivekyle/opentoolbox-api:latest
+    image: festivekyle/opentoolbox-api
     ports:
       - '4000:4000'
     labels:
@@ -42,7 +42,7 @@ services:
     restart: always
 
   frontend:
-    image: festivekyle/opentoolbox-frontend:latest
+    image: festivekyle/opentoolbox-frontend
     ports:
       - '3000:3000'
     labels:
@@ -57,6 +57,7 @@ services:
     image: containrrr/watchtower
     environment:
       - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_DEBUG=true
+      - WATCHTOWER_POLL_INTERVAL=60
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 60
