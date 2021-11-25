@@ -46,6 +46,9 @@ services:
     image: festivekyle/opentoolbox-frontend
     ports:
       - '3000:3000'
+    environment:
+      - API_ENDPOINT=${API_ENDPOINT}
+      - FRONTENDPORT=${FRONTEND_PORT}
     labels:
       - com.centurylinklabs.watchtower.enable=true
     volumes:

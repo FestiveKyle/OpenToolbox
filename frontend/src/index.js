@@ -8,7 +8,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { UserStateProvider } from './hooks/useUserState'
 
 const apolloClient = new ApolloClient({
-  uri: process.env.REACT_APP_API_ENDPOINT || '/graphql',
+  uri: process.env.API_ENDPOINT || '/graphql',
   credentials: 'include',
   cache: new InMemoryCache(),
 })
