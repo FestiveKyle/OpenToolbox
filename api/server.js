@@ -169,12 +169,8 @@ const runServer = async () => {
   const app = express()
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(
-    cors({
-      origin: FRONTEND_URL_FOR_CORS,
-      credentials: true,
-    }),
-  )
+
+  app.set('trust proxy', 1)
 
   function redirectWwwTraffic(req, res, next) {
     console.log('req:', req)
@@ -203,7 +199,12 @@ const runServer = async () => {
     }),
   )
 
-  app.set('trust proxy', 1)
+  app.use(
+    cors({
+      origin: FRONTEND_URL_FOR_CORS,
+      credentials: true,
+    }),
+  )
 
   app.use(passport.initialize())
   app.use(passport.session())
