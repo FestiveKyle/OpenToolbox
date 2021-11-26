@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const path = require('path')
 
-const PORT = process.env.FRONTEND_PORT || 3000
+const PORT = process.env.FRONTEND_SERVER_PORT || 3000
 
 app.use(express.static('build'))
 
