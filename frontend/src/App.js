@@ -20,7 +20,7 @@ export const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} exact={true} />
           <Route
-            path="/toolbox"
+            path="toolbox"
             element={
               <PrivatePage>
                 <ToolboxPage />
@@ -28,7 +28,7 @@ export const App = () => {
             }
           />
           <Route
-            path="/login"
+            path="login"
             element={
               <LoginPage
                 headerRef={headerRef}
@@ -37,7 +37,7 @@ export const App = () => {
             }
           />
           <Route
-            path="/friends"
+            path="friends"
             element={
               <PrivatePage>
                 <FriendsPage />
@@ -45,14 +45,14 @@ export const App = () => {
             }
           />
           <Route
-            path="/search"
+            path="search"
             element={
               <PrivatePage>
                 <SearchPage />
               </PrivatePage>
             }
           />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="register" element={<RegisterPage />} />
         </Routes>
       </Flex>
     </Flex>
