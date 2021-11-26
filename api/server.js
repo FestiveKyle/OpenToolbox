@@ -177,6 +177,7 @@ const runServer = async () => {
   )
   app.set('trust proxy', 1)
   function redirectWwwTraffic(req, res, next) {
+    console.log('req:', req)
     if (req.headers.host.slice(0, 4) === 'www.') {
       const newHost = req.headers.host.slice(4)
       return res.redirect(301, 'https://' + newHost + req.originalUrl)
