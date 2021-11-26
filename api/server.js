@@ -171,7 +171,7 @@ const runServer = async () => {
   app.use(express.urlencoded({ extended: true }))
   app.use(
     cors({
-      origin: FRONTEND_URL_FOR_CORS.split(','),
+      origin: FRONTEND_URL_FOR_CORS,
       credentials: true,
     }),
   )
