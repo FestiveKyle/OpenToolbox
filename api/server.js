@@ -179,7 +179,10 @@ const runServer = async () => {
   function redirectWwwTraffic(req, res, next) {
     if (req.headers.host.slice(0, 4) === 'www.') {
       const newHost = req.headers.host.slice(4)
-      return res.redirect(301, req.protocol + '://' + newHost + req.originalUrl)
+      return res.redirect(301, 'https://' + newHost + req.originalUrl)
+    } else if (req.headers.origin.slice(0, 4) === 'https://www.') {
+      const newHost = req.headers.origin.slice(12)
+      return res.redirect(301, 'https://' + newHost + req.originalUrl)
     }
     next()
   }
