@@ -175,7 +175,7 @@ const runServer = async () => {
       credentials: true,
     }),
   )
-  app.set('trust proxy', 1)
+
   function redirectWwwTraffic(req, res, next) {
     console.log('req:', req)
     if (req.headers.host.slice(0, 4) === 'www.') {
@@ -202,6 +202,9 @@ const runServer = async () => {
       },
     }),
   )
+
+  app.set('trust proxy', 1)
+
   app.use(passport.initialize())
   app.use(passport.session())
   // app.use(cookieParser('secretcode'))
