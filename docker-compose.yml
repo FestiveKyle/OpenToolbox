@@ -3,7 +3,7 @@ services:
   arangodb:
     ports:
       - '8529:8529'
-    image: 'arangodb/arangodb:3.8.2'
+    image: 'arangodb/arangodb:3.8.3'
     volumes:
       - ${DB_MOUNT_LOCATION}/arangodb3:/var/lib/arangodb3
       - ${DB_MOUNT_LOCATION}/arangodb3-apps:/var/lib/arangodb3-apps
@@ -11,7 +11,7 @@ services:
       - ARANGO_ROOT_PASSWORD=${ARANGO_ROOT_PASSWORD}
 
   redis:
-    image: bitnami/redis
+    image: bitnami/redis:6.0.16-debian-10-r28
     ports:
       - '6379:6379'
     environment:
