@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { Header } from './Header'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import ToolboxPage from './ToolboxPage'
 import { LoginPage } from './LoginPage'
 import { RegisterPage } from './RegisterPage'
@@ -9,6 +9,7 @@ import PrivatePage from './PrivatePage'
 import { HomePage } from './HomePage'
 import FriendsPage from './FriendsPage'
 import { SearchPage } from './SearchPage'
+import PageNotFound from './404PageNotFound'
 
 export const App = () => {
   const headerRef = useRef()
@@ -53,6 +54,8 @@ export const App = () => {
             }
           />
           <Route path="register" element={<RegisterPage />} />
+          <Route path="404" element={<PageNotFound />} />
+          <Navigate to="/404" state={{ from: location }} />
         </Routes>
       </Flex>
     </Flex>
