@@ -12,14 +12,14 @@ import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useUserState } from './hooks/useUserState'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Redirect, useHistory, useLocation } from 'react-router-dom'
 import { useTitle } from 'react-use'
 
 export const LoginPage = ({ headerRef }) => {
   useTitle('Login - OpenToolbox')
   const { isLoggedIn, login } = useUserState()
   const location = useLocation()
-  const navigate = useNavigate()
+  const history = useHistory()
 
   const from = location.state?.from?.pathname || '/'
 
@@ -53,12 +53,19 @@ export const LoginPage = ({ headerRef }) => {
       variables: { email, password },
       onCompleted: () => {
         reset()
-        navigate(from, { replace: true })
+        history.replace(from)
       },
     })
   }
 
-  if (isLoggedIn) return <Navigate to={from} replace={true} />
+  if (isLoggedIn)
+    return (
+      <Redirect
+        to={{
+          pathname: from,
+        }}
+      />
+    )
 
   return (
     <Flex mx="auto" my="4rem">

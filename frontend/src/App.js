@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { Header } from './Header'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes, Switch } from 'react-router-dom'
 import ToolboxPage from './ToolboxPage'
 import { LoginPage } from './LoginPage'
 import { RegisterPage } from './RegisterPage'
@@ -18,45 +18,52 @@ export const App = () => {
     <Flex flexDirection="column" minH="100vh">
       <Header headerRef={headerRef} />
       <Flex as="main" h="100%" flexGrow="1" px="2rem">
-        <Routes>
-          <Route path="/" element={<HomePage />} exact={true} />
+        <Switch>
+          <Route path="/" component={HomePage} exact={true} />
           <Route
-            path="toolbox"
-            element={
-              <PrivatePage>
-                <ToolboxPage />
-              </PrivatePage>
-            }
+            path="/toolbox"
+            exact
+            render={() => {
+              return (
+                <PrivatePage>
+                  <ToolboxPage />
+                </PrivatePage>
+              )
+            }}
           />
           <Route
-            path="login"
-            element={
-              <LoginPage
-                headerRef={headerRef}
-                headerHeight={headerRef?.current?.contentHeight}
-              />
-            }
+            path="/login"
+            exact
+            render={() => {
+              return (
+                <LoginPage
+                  headerRef={headerRef}
+                  headerHeight={headerRef?.current?.contentHeight}
+                />
+              )
+            }}
           />
           <Route
-            path="friends"
-            element={
+            path="/friends"
+            exact
+            render={() => (
               <PrivatePage>
                 <FriendsPage />
               </PrivatePage>
-            }
+            )}
           />
           <Route
-            path="search"
-            element={
+            path="/search"
+            exact
+            render={() => (
               <PrivatePage>
                 <SearchPage />
               </PrivatePage>
-            }
+            )}
           />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="404" element={<PageNotFound />} />
-          <Navigate to="/404" state={{ from: location }} />
-        </Routes>
+          <Route path="/register" component={RegisterPage} />
+          <Route path="*" component={PageNotFound} />
+        </Switch>
       </Flex>
     </Flex>
   )
