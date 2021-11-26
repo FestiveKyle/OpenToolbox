@@ -27,10 +27,7 @@ const {
   ARANGO_ROOT_PASSWORD,
   ARANGO_URL,
   ARANGO_DATABASE_NAME,
-  API_URL,
-  API_PORT,
-  FRONTEND_URL,
-  FRONTEND_DEPLOYMENT_PORT,
+  FRONTEND_URL_FOR_CORS,
   SESSION_SECRETS,
   REDIS_URL,
   REDIS_PASSWORD,
@@ -174,7 +171,7 @@ const runServer = async () => {
   app.use(express.urlencoded({ extended: true }))
   app.use(
     cors({
-      origin: `${FRONTEND_URL}:${FRONTEND_DEPLOYMENT_PORT}`,
+      origin: `${FRONTEND_URL_FOR_CORS}`,
       credentials: true,
     }),
   )
