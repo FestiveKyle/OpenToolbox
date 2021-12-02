@@ -9,13 +9,17 @@ services:
       - ${DB_MOUNT_LOCATION}/arangodb3-apps:/var/lib/arangodb3-apps
     environment:
       - ARANGO_ROOT_PASSWORD=${ARANGO_ROOT_PASSWORD}
+    restart: always
+
 
   redis:
-    image: bitnami/redis:6.0.16-debian-10-r28
+    image: bitnami/redis
+    user: root
     ports:
       - '6379:6379'
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+    restart: always
 
   api:
     image: festivekyle/opentoolbox-api
@@ -65,3 +69,4 @@ services:
       - WATCHTOWER_POLL_INTERVAL=60
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
